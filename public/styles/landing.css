@@ -157,7 +157,7 @@ a {
 }
 
 .image:nth-child(3) {
-    z-index: 2;
+    z-index: 3;
     transform: translateX(90px) translateY(0px);
 }
 

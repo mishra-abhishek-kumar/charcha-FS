@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.mainContainer {
+    display: flex;
+}
+
+.leftContainer {
+    width: 40vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    background-image: linear-gradient(#00c2fd, #13bff3, rgb(88, 88, 255));
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15vh;
+}
+
+.logo img {
+    height: 4rem;
+}
+
+.leftContainer h1 {
+    font-family: "Pacifico", cursive;
+    font-weight: 400;
+    font-size: 3rem;
+}
+
+.leftContainer p {
+    line-height: 2rem;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.enjoy {
+    margin-top: -80px;
+    scale: 0.5;
+}
+
+.rightContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 18vh;
+    width: 60vw;
+}
+
+.headingMessage {
+    font-size: 2.5rem;
+}
+
+/* Form  */
+.form {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 7rem;
+    width: 45vw;
+    margin: 40px 0px 0px 0px;
+    gap: 1.5rem;
+}
+
+.formName,
+.formEmail,
+.formPhone,
+.formPassword {
+    font-size: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    all: unset;
+    padding: 0.5rem;
+    border: 1px solid #00c2fd;
+    border-radius: 10px;
+    font-size: 0.9em;
+    color: #00c2fd;
+    transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.label {
+    position: absolute;
+    top: 0.5rem;
+    left: 1rem;
+    color: #00c2fd;
+    pointer-events: none;
+    transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input:focus {
+    border: 1px solid #00c2fd;
+}
+
+.input:is(:focus, :valid)~label {
+    transform: translateY(-100%) scale(1);
+    background-color: white;
+    padding-inline: 0.3rem;
+    color: #00572D;
+}
+
+input[type=submit] {
+    width: 100%;
+    background-color: #00c2fd;
+    cursor: pointer;
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem;
+    border: 1px solid #00c2fd;
+    border-radius: 10px;
+    transition: background-color 100ms linear;
+}
+
+input[type=submit]:hover {
+    color: #00c2fd;
+    background-color: white;
+}
+
+input[type=submit]:active {
+    color: white;
+    background-color: #00c2fd;
+}
+
+.formPassword {
+    position: relative;
+}
+
+.password-checkbox-container {
+    position: absolute;
+    top: 50%;
+    right: 4%;
+    transform: translateY(-40%);
+    display: flex;
+    align-items: center;
+}
+
+input[type=checkbox] {
+    accent-color: #00c2fd;
+}
+
+.signIn {
+    margin-top: 10px;
+}
