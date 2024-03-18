@@ -32,7 +32,7 @@ const signUpController = async (req, res) => {
 		//generating accessToken
 		const accessToken = generateAccessToken({ id: user.id });
 
-		return res.status(201).json(accessToken);
+		return res.status(200).json({user, accessToken});
 	} catch (error) {
 		return res.status(500).send(error);
 	}
@@ -64,7 +64,7 @@ const signInController = async (req, res) => {
 		const accessToken = generateAccessToken({ id: user[0].id });
 
 		//sending user on successful login
-		return res.status(200).json(accessToken);
+		return res.status(200).json({user, accessToken});
 	} catch (error) {
 		return res.status(500).send(error);
 	}
@@ -75,7 +75,6 @@ const generateAccessToken = (id) => {
 		const accessToken = jwt.sign(id, process.env.ACCESS_TOKEN_PRIVATE_KEY, {
 			expiresIn: "1d",
 		});
-		console.log(accessToken);
 		return accessToken;
 	} catch (error) {
 		console.log(error);

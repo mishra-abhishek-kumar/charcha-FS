@@ -25,7 +25,7 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 4001;
 // sequelize.sync({ force: true })
 sequelize
-	.sync({ force: true })
+	.sync()
 	.then((user) => {
 		app.listen(PORT, () => {
 			console.log("Listening on PORT:", PORT);
