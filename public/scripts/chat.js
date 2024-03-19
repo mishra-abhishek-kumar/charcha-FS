@@ -15,7 +15,9 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 	console.log(response.data.chats);
 	for (var i = 0; i < response.data.chats.length; i++) {
-		chatContainer.append(`${response.data.chats[i].sentFrom}: ${response.data.chats[i].message}`);
+		chatContainer.append(
+			`${response.data.chats[i].sentFrom}: ${response.data.chats[i].message}`
+		);
 	}
 });
 
@@ -46,3 +48,8 @@ form.addEventListener("submit", async (e) => {
 		console.log(error);
 	}
 });
+
+//to run the page again n agaon to get the messages
+setInterval(() => {
+	location.reload();
+}, 5000);
