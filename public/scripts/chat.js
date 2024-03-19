@@ -7,12 +7,16 @@ window.addEventListener("DOMContentLoaded", async () => {
 	if (count == 0) {
 		chatContainer.append(`${localStorage.getItem("userName")} joined`);
 	}
-	const chats = await axios.get("http://localhost:4000/chat/get-message", {
-        headers: {
-            Authorization: localStorage.getItem("accessToken"),
-        },
-    });
-	chatContainer.append(chats.data);
+	const response = await axios.get("http://localhost:4000/chat/get-message", {
+		headers: {
+			Authorization: localStorage.getItem("accessToken"),
+		},
+	});
+
+	console.log(response.data.chats);
+	for (var i = 0; i < response.data.chats.length; i++) {
+		chatContainer.append(`${response.data.chats[i].sentFrom}: ${response.data.chats[i].message}`);
+	}
 });
 
 form.addEventListener("submit", async (e) => {
@@ -26,7 +30,7 @@ form.addEventListener("submit", async (e) => {
 					localStorage.getItem("userName")),
 				message: formMessage.value,
 			},
-            {
+			{
 				headers: {
 					Authorization: localStorage.getItem("accessToken"),
 				},
