@@ -31,8 +31,8 @@ const signUpController = async (req, res) => {
 
 		//generating accessToken
 		const accessToken = generateAccessToken({ id: user.id });
-
-		return res.status(200).json({user, accessToken});
+        
+		return res.status(201).json({user, accessToken});
 	} catch (error) {
 		return res.status(500).send(error);
 	}

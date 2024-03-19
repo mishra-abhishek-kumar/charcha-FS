@@ -24,7 +24,7 @@ async function loginUser(e) {
 		);
 		if (response.status == "200") {
 			localStorage.setItem("accessToken", response.data.accessToken);
-            localStorage.setItem("userName", response.data.user[0].name);
+			localStorage.setItem("userName", response.data.user[0].name);
 			window.location.href = `http://localhost:4000/views/chat.html`;
 		}
 	} catch (error) {

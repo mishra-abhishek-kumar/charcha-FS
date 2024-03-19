@@ -15,12 +15,17 @@ const mainRoute = require("./routes/index");
 //imports required for DB connection and table creation
 const sequelize = require("./util/dbConnect");
 const User = require("./models/User");
+const Message = require("./models/Message");
 
 app.use("/", mainRoute);
 const path = require("path");
 app.use((req, res) => {
 	res.sendFile(path.join(__dirname, `public/${req.url}`));
 });
+
+//Defining relations between models
+User.hasMany(Message, { as: "sentMessages", foreignKey: "senderId" });
+Message.belongsTo(User, { as: "sender", foreignKey: "senderId" });
 
 const PORT = process.env.PORT || 4001;
 // sequelize.sync({ force: true })

@@ -25,8 +25,8 @@ async function createUser(e) {
 			userInfo
 		);
 		if (response.status == "201") {
-            localStorage.setItem("accessToken", response.data.accessToken);
-            localStorage.setItem("userName", response.data.user[0].name);
+			localStorage.setItem("accessToken", response.data.accessToken);
+			localStorage.setItem("userName", response.data.user.name);
 			window.location.href = `http://localhost:4000/views/chat.html`;
 		}
 	} catch (error) {
