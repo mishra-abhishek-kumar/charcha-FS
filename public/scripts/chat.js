@@ -1,25 +1,42 @@
 const formMessage = document.getElementById("message");
 const chatContainer = document.getElementById("chat-container");
 const form = document.getElementById("form");
+const user = document.getElementById("user");
 
-let count = 0;
+let lastmsgId =
+	localStorage.getItem("lastmsgId") !== null
+		? Number(localStorage.getItem("lastmsgId"))
+		: 0;
+
 window.addEventListener("DOMContentLoaded", async () => {
-	if (count == 0) {
-		chatContainer.append(`${localStorage.getItem("userName")} joined`);
-	}
-	const response = await axios.get("http://localhost:4000/chat/get-message", {
-		headers: {
-			Authorization: localStorage.getItem("accessToken"),
-		},
-	});
+	user.append(`${localStorage.getItem("userName")} joined`);
 
-	console.log(response.data.chats);
-	for (var i = 0; i < response.data.chats.length; i++) {
-		chatContainer.append(
-			`${response.data.chats[i].sentFrom}: ${response.data.chats[i].message}`
+	try {
+		const response = await axios.get(
+			`http://localhost:4000/chat/get-message/${lastmsgId}`,
+			{
+				headers: {
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			}
 		);
+
+		const messages = response.data;
+		const storedMessages = JSON.parse(localStorage.getItem("chats")) || [];
+		const allMessages = [...storedMessages, ...messages];
+		localStorage.setItem("chats", JSON.stringify(allMessages));
+		displayMessages(allMessages);
+		localStorage.setItem("lastmsgId", allMessages.length);
+	} catch (error) {
+		console.log("Error fetching messages: ", error);
 	}
 });
+
+function displayMessages(messages) {
+	messages.forEach((message) => {
+		chatContainer.append(`${message.sentFrom}: ${message.message}`);
+	});
+}
 
 form.addEventListener("submit", async (e) => {
 	e.preventDefault();
@@ -40,7 +57,7 @@ form.addEventListener("submit", async (e) => {
 		);
 
 		if (response.status == "200") {
-			console.log(response.data);
+			location.reload();
 		}
 
 		formMessage.value = "";
@@ -50,6 +67,6 @@ form.addEventListener("submit", async (e) => {
 });
 
 //to run the page again n agaon to get the messages
-setInterval(() => {
-	location.reload();
-}, 5000);
+// setInterval(() => {
+// 	location.reload();
+// }, 5000);
