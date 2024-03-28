@@ -27,6 +27,12 @@ app.use((req, res) => {
 User.hasMany(Message, { as: "sentMessages", foreignKey: "senderId" });
 Message.belongsTo(User, { as: "sender", foreignKey: "senderId" });
 
+User.hasMany(Message, { as: "ReceivedMessages", foreignKey: "RecipientId" });
+//Message.belongsTo(User, { as: "Recipient", foreignKey: "RecipientId" });
+//association between group and messages
+Group.hasMany(Message, { as: "GroupMessages", foreignKey: "GroupId" });
+//Message.belongsTo(Group, { as: "Group", foreignKey: "GroupId" });
+
 const PORT = process.env.PORT || 4001;
 // sequelize.sync({ force: true })
 sequelize
