@@ -11,7 +11,7 @@
 <body>
     <div class="left-container">
         <div class="top-bar">
-            <img class="self-profile" src="" alt="">
+            <img class="self-profile" src="welcome-right-container" alt="profilePicture">
             <div class="top-bar-options">
                 <a href="#" title="Create group"><i class="fa-solid fa-people-group bar-icons"></i></a>
                 <a href="#" title="Logout"><i class="fa-solid fa-arrow-right-from-bracket bar-icons"></i></a>
@@ -25,87 +25,45 @@
             </form>
         </div>
 
-        <div class="chats">
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
+        <div class="chats" id="chats">
+            <!-- <div class="chat">
+                <img src="https://avatar.iran.liara.run/public" alt="profilePicture" class="user-profile">
                 <div class="name-lastMessage">
                     <h3>Abhishek Mishra</h3>
                     <p class="last-message">Hii.. how are you</p>
                 </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
-            <div class="chat">
-                <img src="" alt="" class="user-profile">
-                <div class="name-lastMessage">
-                    <h3>Abhishek Mishra</h3>
-                    <p class="last-message">Hii.. how are you</p>
-                </div>
-            </div>
+            </div> -->
         </div>
     </div>
 
-    <div class="right-container">
+    <div class="welcome-right-container" id="welcome-right-container">
         <div class="app-logo">
             <img src="../assets/AppLogo.png" alt="AppLogo">
             <h1 class="app-name">Charcha</h1>
         </div>
-        <h2>Hi Abhishek Mishra, select a chat to start conversation</h2>
+        <h2 id="welcome-msg"></h2>
         <p><i class="fa-solid fa-lock"></i> Your personal messages are end-to-end encrypted</p>
+    </div>
+
+    <div class="message-right-container" id="message-right-container">
+        <div class="top-bar chat-top-bar">
+            <img class="self-profile" src="welcome-right-container" alt="profilePicture">
+            <h3 id="chat-username"></h3>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-section" id="chat-section">
+                <!-- <ul id="messages"></ul> -->
+            </div>
+        </div>
+        
+        <div class="send-chat">
+            <a href="#"><i class="fa-solid fa-plus"></i></i></a>
+            <form id="chat-form" class="message-form">
+                <input class="message" id="message" type="text" placeholder="Type a message">
+                <button type="submit" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
     </div>
 
     <script src="https://kit.fontawesome.com/3c20a37bb5.js" crossorigin="anonymous"></script>

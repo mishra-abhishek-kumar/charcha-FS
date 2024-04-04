@@ -27,10 +27,12 @@ app.use((req, res) => {
 User.hasMany(Message, { as: "sentMessages", foreignKey: "senderId" });
 Message.belongsTo(User, { as: "sender", foreignKey: "senderId" });
 
+User.hasMany(Message, { as: "receivedMessages", foreignKey: "reciepientId" });
+Message.belongsTo(User, { as: "recipient", foreignKey: "reciepientId" });
+
 const PORT = process.env.PORT || 4001;
 // sequelize.sync({ force: true })
-sequelize
-	.sync()
+sequelize.sync()
 	.then((user) => {
 		app.listen(PORT, () => {
 			console.log("Listening on PORT:", PORT);
