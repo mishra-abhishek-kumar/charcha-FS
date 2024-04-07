@@ -13,8 +13,9 @@
         <div class="top-bar">
             <img class="self-profile" src="welcome-right-container" alt="profilePicture">
             <div class="top-bar-options">
-                <a href="#" title="Create group"><i class="fa-solid fa-people-group bar-icons"></i></a>
-                <a href="#" title="Logout"><i class="fa-solid fa-arrow-right-from-bracket bar-icons"></i></a>
+                <button id="showCreateGroupBtn" title="Create group"><i
+                        class="fa-solid fa-people-group bar-icons"></i></button>
+                <button title="Logout"><i class="fa-solid fa-arrow-right-from-bracket bar-icons"></i></button>
             </div>
         </div>
 
@@ -56,7 +57,7 @@
                 <!-- <ul id="messages"></ul> -->
             </div>
         </div>
-        
+
         <div class="send-chat">
             <a href="#"><i class="fa-solid fa-plus"></i></i></a>
             <form id="chat-form" class="message-form">
@@ -66,9 +67,24 @@
         </div>
     </div>
 
+    <div class="createGroup-container">
+        <form class="creategroup-form" id="creategroup-form">
+            <input type="text" class="group-name" id="group-name" name="groupName" placeholder="Enter group name">
+            <input type="text" class="group-name" id="group-description" name="groupDescription" placeholder="Enter group description(optional)">
+
+            <label>Select users</label>
+            <div class="users" id="users">
+            </div>
+
+            <input class="submitBtn" id="submitBtn" type="submit" value="Submit">
+            <button type="button" class="cancelBtn" id="cancelBtn">Cancel</button>
+        </form>
+    </div>
+
     <script src="https://kit.fontawesome.com/3c20a37bb5.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"></script>
     <script src="../scripts/chat.js"></script>
+    <script src="../scripts/createGroup.js"></script>
 </body>
 
 </html>

@@ -16,6 +16,8 @@ const mainRoute = require("./routes/index");
 const sequelize = require("./util/dbConnect");
 const User = require("./models/User");
 const Message = require("./models/Message");
+const Group = require("./models/Group");
+const UserGroup = require("./models/UserGroup");
 
 app.use("/", mainRoute);
 const path = require("path");
@@ -24,6 +26,15 @@ app.use((req, res) => {
 });
 
 //Defining relations between models
+
+// User and Group many-to-many relationship
+User.belongsToMany(Group, { through: UserGroup });
+Group.belongsToMany(User, { through: UserGroup });
+
+// Messages can belong to a Group (group chat) or directly to a User (private chat)
+Message.belongsTo(Group, { foreignKey: 'groupId', as: 'group' });
+Group.hasMany(Message, { foreignKey: 'groupId', as: 'messages' });
+
 User.hasMany(Message, { as: "sentMessages", foreignKey: "senderId" });
 Message.belongsTo(User, { as: "sender", foreignKey: "senderId" });
 
@@ -32,7 +43,8 @@ Message.belongsTo(User, { as: "recipient", foreignKey: "reciepientId" });
 
 const PORT = process.env.PORT || 4001;
 // sequelize.sync({ force: true })
-sequelize.sync()
+sequelize
+	.sync()
 	.then((user) => {
 		app.listen(PORT, () => {
 			console.log("Listening on PORT:", PORT);

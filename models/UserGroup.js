@@ -1,33 +1,33 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../util/dbConnect");
 
-const Message = sequelize.define("message", {
+const UserGroup = sequelize.define("userGroup", {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
 		allowNull: false,
 		primaryKey: true,
 	},
-	sentFrom: {
-		type: Sequelize.STRING,
+	userId: {
+		type: Sequelize.INTEGER,
 		allowNull: false,
-	},
-	message: {
-		type: Sequelize.STRING,
-		allowNull: false,
-	},
-	messageTime: {
-		type: Sequelize.STRING,
-		allowNull: false,
+		references: {
+			model: "users", // 'users' refers to table name
+			key: "id", // 'id' refers to column name in users table
+		},
 	},
 	groupId: {
 		type: Sequelize.INTEGER,
-		allowNull: true,
+		allowNull: false,
 		references: {
 			model: "groups", // 'groups' refers to table name
 			key: "id", // 'id' refers to column name in groups table
 		},
 	},
+	isAdmin: {
+		type: Sequelize.BOOLEAN,
+		allowNull: false,
+	},
 });
 
-module.exports = Message;
+module.exports = UserGroup;

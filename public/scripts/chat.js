@@ -2,12 +2,14 @@ const chats = document.getElementById("chats");
 const welcomeMsg = document.getElementById("welcome-msg");
 const formMessage = document.getElementById("message");
 const chatForm = document.getElementById("chat-form");
-const chatSection = document.getElementById('chat-section');
+const chatSection = document.getElementById("chat-section");
 
 let reciepientId = 0;
 
 window.addEventListener("DOMContentLoaded", async () => {
 	try {
+		//hiding create-group form
+		document.querySelector(".createGroup-container").style.display = "none";
 		const users = await axios.get(`http://localhost:4000/chat/get-users`, {
 			headers: {
 				Authorization: localStorage.getItem("accessToken"),
@@ -101,42 +103,40 @@ chats.addEventListener("click", async (e) => {
 	}
 });
 
-
 function displayMessages(chats) {
-    if(chats.sentFrom === localStorage.getItem('userName')) {
-        const ul = document.createElement('ul');
-        ul.className = 'messages-sender';
+	if (chats.sentFrom === localStorage.getItem("userName")) {
+		const ul = document.createElement("ul");
+		ul.className = "messages-sender";
 
-        const li = document.createElement('li');
-        li.className = 'messages-style-sender';
-        li.innerText = chats.message;
+		const li = document.createElement("li");
+		li.className = "messages-style-sender";
+		li.innerText = chats.message;
 
-        const span = document.createElement('span');
-        span.className = 'message-time';
-        span.innerText = chats.messageTime;
+		const span = document.createElement("span");
+		span.className = "message-time";
+		span.innerText = chats.messageTime;
 
-        li.appendChild(span);
-        ul.appendChild(li);
+		li.appendChild(span);
+		ul.appendChild(li);
 
-        chatSection.appendChild(ul);
-    } else {
-        const ul = document.createElement('ul');
-        ul.className = 'messages-receiver';
+		chatSection.appendChild(ul);
+	} else {
+		const ul = document.createElement("ul");
+		ul.className = "messages-receiver";
 
-        const li = document.createElement('li');
-        li.className = 'messages-style-receiver';
-        li.innerText = chats.message;
+		const li = document.createElement("li");
+		li.className = "messages-style-receiver";
+		li.innerText = chats.message;
 
-        const span = document.createElement('span');
-        span.className = 'message-time';
-        span.innerText = chats.messageTime;
+		const span = document.createElement("span");
+		span.className = "message-time";
+		span.innerText = chats.messageTime;
 
-        li.appendChild(span);
-        ul.appendChild(li);
+		li.appendChild(span);
+		ul.appendChild(li);
 
-        chatSection.appendChild(ul);
-    }
-
+		chatSection.appendChild(ul);
+	}
 }
 
 chatForm.addEventListener("submit", async (e) => {

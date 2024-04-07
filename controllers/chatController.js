@@ -16,15 +16,11 @@ const getUsers = async (req, res) => {
 
 const sendMessage = async (req, res, next) => {
 	const { userName, message, messageTime } = req.body;
-    console.log("11111111111");
-    console.log(userName, message, messageTime);
 	try {
-		// const user = await User.findByPk(req.id);
-        console.log("22222222");
 		const chat = await Message.create({
 			sentFrom: userName,
 			message: message,
-            messageTime: messageTime,
+			messageTime: messageTime,
 			senderId: req.id,
 			reciepientId: req.params.reciepientId,
 		});
@@ -46,7 +42,6 @@ const getMessages = async (req, res, next) => {
 				},
 			},
 		});
-		// console.log("Messages", messages);
 
 		const reciepientUser = await User.findByPk(req.params.reciepientId);
 
