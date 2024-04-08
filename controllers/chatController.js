@@ -40,6 +40,7 @@ const getMessages = async (req, res, next) => {
 				reciepientId: {
 					[Op.in]: [req.params.reciepientId, req.id],
 				},
+                groupId: { [Op.is]: null },
 			},
 		});
 

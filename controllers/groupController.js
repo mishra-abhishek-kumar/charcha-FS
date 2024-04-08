@@ -1,5 +1,6 @@
 const Group = require("../models/Group");
 const userGroup = require("../models/UserGroup");
+const Message = require("../models/Message");
 
 const createGroup = async (req, res) => {
 	try {
@@ -43,7 +44,61 @@ const createGroupUSers = async (req, res) => {
 	}
 };
 
+const getUserGroups = async (req, res) => {
+	try {
+		const usergroups = await userGroup.findAll({ where: { userId: req.id } });
+		return res.status(200).json({ usergroups });
+	} catch (error) {
+		console.log("Error in getUserGroups controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+const getGroups = async (req, res) => {
+	try {
+		const groups = await Group.findAll({ where: { id: req.params.groupId } });
+		return res.status(200).json({ groups });
+	} catch (error) {
+		console.log("Error in getGroups controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+const getGroupMessages = async (req, res) => {
+	try {
+		const reciepientGroup = await Group.findByPk(req.params.groupId);
+		const messages = await Message.findAll({
+			where: { groupId: req.params.groupId },
+		});
+		return res.status(200).json({ chats: messages, reciepientGroup });
+	} catch (error) {
+		console.log("Error in getGroupMessages controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+const sendMessage = async (req, res) => {
+	const { userName, message, messageTime, groupId } = req.body;
+	try {
+		const chat = await Message.create({
+			sentFrom: userName,
+			message: message,
+			messageTime: messageTime,
+			groupId: groupId,
+			senderId: req.id,
+			reciepientId: req.params.reciepientId,
+		});
+		return res.status(200).json({ chat });
+	} catch (error) {
+		return res.status(500).send(error);
+	}
+};
+
 module.exports = {
 	createGroup,
 	createGroupUSers,
+	getUserGroups,
+	getGroups,
+	getGroupMessages,
+	sendMessage,
 };

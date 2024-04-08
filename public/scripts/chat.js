@@ -4,12 +4,15 @@ const formMessage = document.getElementById("message");
 const chatForm = document.getElementById("chat-form");
 const chatSection = document.getElementById("chat-section");
 
-let reciepientId = 0;
+let chatType;
+let chatId;
 
 window.addEventListener("DOMContentLoaded", async () => {
 	try {
 		//hiding create-group form
 		document.querySelector(".createGroup-container").style.display = "none";
+
+		//fetching all individual users
 		const users = await axios.get(`http://localhost:4000/chat/get-users`, {
 			headers: {
 				Authorization: localStorage.getItem("accessToken"),
@@ -17,7 +20,30 @@ window.addEventListener("DOMContentLoaded", async () => {
 		});
 
 		for (let i = 0; i < users.data.users.length; i++) {
-			displayUsers(users.data.users[i]);
+			displayUserAndGroup(users.data.users[i], "user");
+		}
+
+		//fetching all groups
+		const userGroup = await axios.get(
+			`http://localhost:4000/group/get-usergroups`,
+			{
+				headers: {
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			}
+		);
+
+		for (let j = 0; j < userGroup.data.usergroups.length; j++) {
+			const group = await axios.get(
+				`http://localhost:4000/group/get-groups/${userGroup.data.usergroups[j].groupId}`,
+				{
+					headers: {
+						Authorization: localStorage.getItem("accessToken"),
+					},
+				}
+			);
+
+			displayUserAndGroup(group.data.groups[0], "group");
 		}
 
 		//Events to change selected chat background color
@@ -43,10 +69,11 @@ window.addEventListener("DOMContentLoaded", async () => {
 	}
 });
 
-function displayUsers(userData) {
+function displayUserAndGroup(data, type) {
 	let chat = document.createElement("div");
 	chat.className = "chat";
-	chat.setAttribute("id", userData.id);
+	chat.setAttribute("id", data.id);
+	chat.setAttribute("data-chat-type", type); // 'user' or 'group'
 
 	let img = document.createElement("img");
 	img.className = "user-profile";
@@ -56,8 +83,8 @@ function displayUsers(userData) {
 	name_lastMsg.className = "name-lastMessage";
 
 	let userName = document.createElement("h3");
-	userName.setAttribute("id", userData.id);
-	userName.innerText = userData.name;
+	userName.setAttribute("id", data.id);
+	userName.innerText = data.name;
 
 	let lastMessage = document.createElement("p");
 	lastMessage.className = "last-message";
@@ -72,34 +99,60 @@ function displayUsers(userData) {
 }
 
 chats.addEventListener("click", async (e) => {
+	let clickedElement = e.target.closest(".chat"); // Ensure we're getting the .chat div regardless of where the user clicks
+	if (!clickedElement) return; // If for some reason the clicked element isn't what we expect, exit
+
+	chatType = clickedElement.getAttribute("data-chat-type");
+	chatId = parseInt(clickedElement.getAttribute("id"));
+
 	// console.log(e.target.id);
 	document.getElementById("welcome-right-container").style.display = "none";
 	document.getElementById("message-right-container").style.display = "block";
 	chatSection.innerHTML = "";
 
-	reciepientId = parseInt(e.target.id);
-	console.log(reciepientId);
-	try {
-		// console.log("11111111");
-		const response = await axios.get(
-			`http://localhost:4000/chat/get-message/${reciepientId}`,
-			{
-				headers: {
-					Authorization: localStorage.getItem("accessToken"),
-				},
-			}
-		);
-		// console.log(response.data);
-		const { chats, reciepientUser } = response.data;
-		console.log("Chats:", chats);
-		// console.log("Recipient User:", reciepientUser.name);
-		document.getElementById("chat-username").innerHTML = reciepientUser.name;
+	if (chatType == "user") {
+		try {
+			const response = await axios.get(
+				`http://localhost:4000/chat/get-message/${chatId}`,
+				{
+					headers: {
+						Authorization: localStorage.getItem("accessToken"),
+					},
+				}
+			);
 
-		for (let i = 0; i < chats.length; i++) {
-			displayMessages(chats[i]);
+			const { chats, reciepientUser } = response.data;
+			console.log("Chats:", chats);
+			document.getElementById("chat-username").innerHTML = reciepientUser.name;
+
+			for (let i = 0; i < chats.length; i++) {
+				displayMessages(chats[i]);
+			}
+		} catch (error) {
+			console.log("Error in fetching chats", error);
 		}
-	} catch (error) {
-		console.log("Error in fetching chats", error);
+	} else if (chatType == "group") {
+		try {
+			const response = await axios.get(
+				`http://localhost:4000/group/get-messages/${chatId}`,
+				{
+					headers: {
+						Authorization: localStorage.getItem("accessToken"),
+					},
+				}
+			);
+
+            const {chats, reciepientGroup} = response.data;
+			console.log("Chats:", chats);
+			document.getElementById("chat-username").innerHTML =
+            reciepientGroup.name;
+
+            for (let i = 0; i < chats.length; i++) {
+				displayMessages(chats[i]);
+			}
+		} catch (error) {
+			console.log("Error in fetching chats", error);
+		}
 	}
 });
 
@@ -139,6 +192,7 @@ function displayMessages(chats) {
 	}
 }
 
+//function to send message
 chatForm.addEventListener("submit", async (e) => {
 	e.preventDefault();
 	try {
@@ -150,13 +204,28 @@ chatForm.addEventListener("submit", async (e) => {
 		minutes = minutes < 10 ? "0" + minutes : minutes;
 		let timeOnly = hours + ":" + minutes;
 
-		const response = await axios.post(
-			`http://localhost:4000/chat/send-message/${reciepientId}`,
-			{
+		let endpoint;
+        let messageInfo;
+		if (chatType == "user") {
+			endpoint = `http://localhost:4000/chat/send-message/${chatId}`;
+			messageInfo = {
 				userName: localStorage.getItem("userName"),
 				message: formMessage.value,
 				messageTime: timeOnly,
-			},
+			};
+		} else if (chatType == "group") {
+			endpoint = `http://localhost:4000/group/send-message/${chatId}`;
+			messageInfo = {
+				userName: localStorage.getItem("userName"),
+				message: formMessage.value,
+				messageTime: timeOnly,
+				groupId: chatId,
+			};
+		}
+
+		const response = await axios.post(
+			endpoint,
+			messageInfo,
 			{
 				headers: {
 					Authorization: localStorage.getItem("accessToken"),
