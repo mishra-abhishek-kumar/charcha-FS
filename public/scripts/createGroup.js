@@ -31,7 +31,6 @@ function displayUsersforGroup(user) {
 	users.appendChild(label);
 }
 
-// const groupName = document.getElementById("group-name");
 const createGroupForm = document.getElementById("creategroup-form");
 createGroupForm.addEventListener("submit", async (e) => {
 	e.preventDefault();

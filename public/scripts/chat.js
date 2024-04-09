@@ -257,3 +257,9 @@ chatForm.addEventListener("submit", async (e) => {
 		console.log("Error in sending message", error);
 	}
 });
+
+//user logout
+document.getElementById('logOut').addEventListener('click', (e) => {
+    localStorage.clear();
+    window.location.href = 'http://localhost:4000/views/landing.html';
+})

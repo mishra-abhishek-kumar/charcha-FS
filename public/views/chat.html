@@ -15,7 +15,8 @@
             <div class="top-bar-options">
                 <button id="showCreateGroupBtn" title="Create group"><i
                         class="fa-solid fa-people-group bar-icons"></i></button>
-                <button title="Logout"><i class="fa-solid fa-arrow-right-from-bracket bar-icons"></i></button>
+                <button title="Logout" id="logOut"><i
+                        class="fa-solid fa-arrow-right-from-bracket bar-icons"></i></button>
             </div>
         </div>
 
@@ -79,6 +80,7 @@
     </div>
 
     <div class="createGroup-container">
+        <h2>Create new group</h2>
         <form class="creategroup-form" id="creategroup-form">
             <input type="text" class="group-name" id="group-name" name="groupName" placeholder="Enter group name">
             <input type="text" class="group-name" id="group-description" name="groupDescription"
@@ -88,7 +90,7 @@
             <div class="users" id="users">
             </div>
 
-            <input class="submitBtn" id="submitBtn" type="submit" value="Submit">
+            <input class="submitBtn" id="submitBtn" type="submit" value="Create group">
             <button type="button" class="cancelBtn" id="cancelBtn">Cancel</button>
         </form>
     </div>
