@@ -11,6 +11,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 	try {
 		//hiding create-group form
 		document.querySelector(".createGroup-container").style.display = "none";
+		document.querySelector(".groupInfo-container").style.display = " none";
 
 		//fetching all individual users
 		const users = await axios.get(`http://localhost:4000/chat/get-users`, {
@@ -112,6 +113,7 @@ chats.addEventListener("click", async (e) => {
 
 	if (chatType == "user") {
 		try {
+			document.getElementById("edit-button").style.display = "none";
 			const response = await axios.get(
 				`http://localhost:4000/chat/get-message/${chatId}`,
 				{
@@ -122,7 +124,6 @@ chats.addEventListener("click", async (e) => {
 			);
 
 			const { chats, reciepientUser } = response.data;
-			console.log("Chats:", chats);
 			document.getElementById("chat-username").innerHTML = reciepientUser.name;
 
 			for (let i = 0; i < chats.length; i++) {
@@ -132,7 +133,26 @@ chats.addEventListener("click", async (e) => {
 			console.log("Error in fetching chats", error);
 		}
 	} else if (chatType == "group") {
+		document.getElementById("edit-button").style.display = "block";
+        localStorage.setItem("groupId", chatId);
 		try {
+			const isAdmin = await axios.get(
+				`http://localhost:4000/group/isAdmin/${localStorage.getItem(
+					"userId"
+				)}/${chatId}`,
+				{
+					headers: {
+						Authorization: localStorage.getItem("accessToken"),
+					},
+				}
+			);
+
+			if (isAdmin.data.isAdmin.length > 0) {
+				document.getElementById("if-admin").style.display = "block";
+			} else {
+				document.getElementById("if-admin").style.display = "none";
+			}
+
 			const response = await axios.get(
 				`http://localhost:4000/group/get-messages/${chatId}`,
 				{
@@ -142,12 +162,11 @@ chats.addEventListener("click", async (e) => {
 				}
 			);
 
-            const {chats, reciepientGroup} = response.data;
-			console.log("Chats:", chats);
-			document.getElementById("chat-username").innerHTML =
-            reciepientGroup.name;
+			const { chats, reciepientGroup } = response.data;
+			document.getElementById("chat-username").innerHTML = reciepientGroup.name;
+            localStorage.setItem("groupName", reciepientGroup.name);
 
-            for (let i = 0; i < chats.length; i++) {
+			for (let i = 0; i < chats.length; i++) {
 				displayMessages(chats[i]);
 			}
 		} catch (error) {
@@ -205,7 +224,7 @@ chatForm.addEventListener("submit", async (e) => {
 		let timeOnly = hours + ":" + minutes;
 
 		let endpoint;
-        let messageInfo;
+		let messageInfo;
 		if (chatType == "user") {
 			endpoint = `http://localhost:4000/chat/send-message/${chatId}`;
 			messageInfo = {
@@ -223,15 +242,11 @@ chatForm.addEventListener("submit", async (e) => {
 			};
 		}
 
-		const response = await axios.post(
-			endpoint,
-			messageInfo,
-			{
-				headers: {
-					Authorization: localStorage.getItem("accessToken"),
-				},
-			}
-		);
+		const response = await axios.post(endpoint, messageInfo, {
+			headers: {
+				Authorization: localStorage.getItem("accessToken"),
+			},
+		});
 
 		// if (response.status == "200") {
 		// 	location.reload();

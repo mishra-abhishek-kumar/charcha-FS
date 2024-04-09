@@ -10,7 +10,6 @@ document
 					Authorization: localStorage.getItem("accessToken"),
 				},
 			});
-			// console.log(response.data.users);
 
 			for (let i = 0; i < response.data.users.length; i++) {
 				displayUsersforGroup(response.data.users[i]);
@@ -32,7 +31,7 @@ function displayUsersforGroup(user) {
 	users.appendChild(label);
 }
 
-const groupName = document.getElementById("group-name");
+// const groupName = document.getElementById("group-name");
 const createGroupForm = document.getElementById("creategroup-form");
 createGroupForm.addEventListener("submit", async (e) => {
 	e.preventDefault();
@@ -65,7 +64,6 @@ createGroupForm.addEventListener("submit", async (e) => {
 	}
 
 	try {
-		console.log("11111", checkedIds, typeof checkedIds);
 		const createGroupUsersResponse = await axios.post(
 			`http://localhost:4000/group/create-group-users/${groupId}`,
 			{ usersIds: checkedIds },
@@ -84,5 +82,5 @@ createGroupForm.addEventListener("submit", async (e) => {
 
 document.getElementById("cancelBtn").addEventListener("click", function () {
 	document.querySelector(".createGroup-container").style.display = "none";
-    location.reload();
+	location.reload();
 });

@@ -11,7 +11,7 @@
 <body>
     <div class="left-container">
         <div class="top-bar">
-            <img class="self-profile" src="welcome-right-container" alt="profilePicture">
+            <img class="self-profile" src="https://avatar.iran.liara.run/public" alt="profilePicture">
             <div class="top-bar-options">
                 <button id="showCreateGroupBtn" title="Create group"><i
                         class="fa-solid fa-people-group bar-icons"></i></button>
@@ -48,8 +48,19 @@
 
     <div class="message-right-container" id="message-right-container">
         <div class="top-bar chat-top-bar">
-            <img class="self-profile" src="welcome-right-container" alt="profilePicture">
-            <h3 id="chat-username"></h3>
+            <div class="group-info">
+                <img class="self-profile" src="https://avatar.iran.liara.run/public" alt="profilePicture">
+                <h3 id="chat-username"></h3>
+            </div>
+            <div class="edit-group" id="edit-button">
+                <button title="Edit group"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <div id="edit-menu" class="hidden">
+                    <ul>
+                        <li><button id="groupInfoBtn">Group info</button></li>
+                        <li class="ifAdmin" id="if-admin"><button>Edit Group</button></li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="chat-container">
@@ -70,7 +81,8 @@
     <div class="createGroup-container">
         <form class="creategroup-form" id="creategroup-form">
             <input type="text" class="group-name" id="group-name" name="groupName" placeholder="Enter group name">
-            <input type="text" class="group-name" id="group-description" name="groupDescription" placeholder="Enter group description(optional)">
+            <input type="text" class="group-name" id="group-description" name="groupDescription"
+                placeholder="Enter group description(optional)">
 
             <label>Select users</label>
             <div class="users" id="users">
@@ -81,10 +93,34 @@
         </form>
     </div>
 
+    <div class="groupInfo-container" id="group-info-container">
+        <div class="top-bar group-info-topbar">
+            <button class="closeGroupInfo" id="close-groupInfo"><i class="fa-solid fa-xmark"></i></button>
+            <h3>Group info</h3>
+        </div>
+
+        <div class="groupInformation">
+            <div class="groupImgName" id="groupImg-Name">
+                <!-- <img src="https://avatar.iran.liara.run/public">
+                <h2>Group Name</h2>
+                <p>Group . 4 members</p> -->
+            </div>
+
+            <div class="groupMembers" id="group-members">
+                <!-- <p>group members</p> -->
+                <!-- <div class="member">
+                    <img src="https://avatar.iran.liara.run/public" alt="profilePicture">
+                    <h3>Abhishek Mishra</h3>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
     <script src="https://kit.fontawesome.com/3c20a37bb5.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"></script>
     <script src="../scripts/chat.js"></script>
     <script src="../scripts/createGroup.js"></script>
+    <script src="../scripts/editGroup.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 const Group = require("../models/Group");
 const userGroup = require("../models/UserGroup");
 const Message = require("../models/Message");
+const User = require("../models/User");
 
 const createGroup = async (req, res) => {
 	try {
@@ -64,6 +65,22 @@ const getGroups = async (req, res) => {
 	}
 };
 
+const isAdmin = async (req, res) => {
+	try {
+		const userId = parseInt(req.params.userId);
+		const groupId = parseInt(req.params.groupId);
+
+		const isAdmin = await userGroup.findAll({
+			where: { groupId: groupId, isAdmin: 1, userId: userId },
+		});
+
+		return res.status(200).json({ isAdmin });
+	} catch (error) {
+		console.log("Error in checking isAdmin controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
 const getGroupMessages = async (req, res) => {
 	try {
 		const reciepientGroup = await Group.findByPk(req.params.groupId);
@@ -90,15 +107,42 @@ const sendMessage = async (req, res) => {
 		});
 		return res.status(200).json({ chat });
 	} catch (error) {
-		return res.status(500).send(error);
+		console.log("Error in sending group message controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
 	}
 };
+
+const getGroupUsers = async (req, res) => {
+	try {
+		const groupUsers = await userGroup.findAll({
+			where: { groupId: req.params.groupId },
+		});
+
+		return res.status(200).json({ groupUsers });
+	} catch (error) {
+		console.log("Error in getting group users controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+const getSingleUser = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.userId);
+        return res.status(200).json({user});
+    } catch (error) {
+        console.log("Error in getSingleUsers from group controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+    }
+}
 
 module.exports = {
 	createGroup,
 	createGroupUSers,
 	getUserGroups,
+	isAdmin,
 	getGroups,
 	getGroupMessages,
 	sendMessage,
+	getGroupUsers,
+    getSingleUser
 };
