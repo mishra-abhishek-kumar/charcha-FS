@@ -135,13 +135,12 @@ const getSingleUser = async (req, res) => {
 };
 
 const makeUserAdmin = async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const groupId = parseInt(req.params.groupId);
 
     try {
-        const userId = parseInt(req.params.userId);
-		const groupId = parseInt(req.params.groupId);
-
         const adminUser = await UserGroup.update({isAdmin: true}, {where: {groupId: groupId, userId: userId}});
-        
+
         return res.status(200).json({adminUser});
     } catch (error) {
         console.log("Error in getUsersToUpdate controller", error.message);
@@ -149,6 +148,19 @@ const makeUserAdmin = async (req, res) => {
     }
 };
 
+const removeUserFromGroup = async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const groupId = parseInt(req.params.groupId);
+
+    try {
+        const adminUser = await UserGroup.destroy({where: {groupId: groupId, userId: userId}});
+
+        return res.status(200).json({adminUser});
+    } catch (error) {
+        console.log("Error in removeUserFromGroup controller", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
 
 module.exports = {
 	createGroup,
@@ -161,4 +173,5 @@ module.exports = {
 	getGroupUsers,
 	getSingleUser,
 	makeUserAdmin,
+    removeUserFromGroup
 };

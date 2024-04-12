@@ -268,10 +268,7 @@ function displayGroupUsers1(data, isAdmin) {
 			// Get the id attribute of the h3 element
 			const id = h3Element.id;
 
-            console.log(`Clicked on button1, ID: ${id}`);
-
             try {
-                console.log(localStorage.getItem("accessToken"), localStorage.getItem("groupId"), id);
                 const response = await axios.put(`http://localhost:4000/group/make-admin/${localStorage.getItem("groupId")}/${id}`);
                 location.reload();
             } catch (error) {
@@ -282,14 +279,19 @@ function displayGroupUsers1(data, isAdmin) {
 			menu.style.display = "none";
 		});
 
-		button2.addEventListener("click", (e) => {
+		button2.addEventListener("click", async (e) => {
 			const member = e.target.closest(".member");
 			// Find the h3 element within the member element
 			const h3Element = member.querySelector("h3");
 			// Get the id attribute of the h3 element
 			const id = h3Element.id;
 
-            console.log(`Clicked on button2, ID: ${id}`);
+            try {
+                const response = await axios.delete(`http://localhost:4000/group/remove-user/${localStorage.getItem("groupId")}/${id}`);
+                location.reload();
+            } catch (error) {
+                console.log("Error in removing user from group", error);
+            }
             
 			menu.style.display = "none";
 		});

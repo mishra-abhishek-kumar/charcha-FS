@@ -12,5 +12,6 @@ router.post("/send-message/:reciepientId", requiredUser, groupController.sendMes
 router.get("/group-users/:groupId", requiredUser, groupController.getGroupUsers);
 router.get("/get-single-user/:userId", requiredUser, groupController.getSingleUser);
 router.put("/make-admin/:groupId/:userId", groupController.makeUserAdmin);
+router.delete("/remove-user/:groupId/:userId", groupController.removeUserFromGroup);
 
 module.exports = router;
