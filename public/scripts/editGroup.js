@@ -124,7 +124,6 @@ closeGroupInfoBtn.addEventListener("click", (e) => {
 });
 
 //Edit group functions
-
 const closeGroupEditBtn = document.getElementById("close-groupEdit");
 
 document.getElementById("groupEditBtn").addEventListener("click", async (e) => {
@@ -152,8 +151,6 @@ document.getElementById("groupEditBtn").addEventListener("click", async (e) => {
 
 		const { groupUsers } = fetchingGroupUsers.data;
 
-		console.log(groupUsers);
-
 		displayGroupInformation1(
 			groupUsers.length,
 			localStorage.getItem("groupName")
@@ -168,7 +165,6 @@ document.getElementById("groupEditBtn").addEventListener("click", async (e) => {
 					},
 				}
 			);
-			console.log(user);
 
 			displayGroupUsers1(user.data.user, groupUsers[i].isAdmin);
 		}
@@ -200,21 +196,104 @@ function displayGroupUsers1(data, isAdmin) {
 	img.src = `https://avatar.iran.liara.run/public`;
 
 	let h3 = document.createElement("h3");
+	h3.setAttribute("id", data.id);
 	h3.innerText = data.name;
 
 	member.appendChild(img);
 	member.appendChild(h3);
 
-	if(isAdmin) {
+	if (isAdmin) {
 		let span = document.createElement("span");
 		span.innerText = "Group admin";
 		span.className = "isAdmin";
 		member.appendChild(span);
 	} else {
-        let edit = document.createElement('i');
-        edit.className = "fa-solid fa-chevron-up edit-icons";
-        member.appendChild(edit);
-    }
+		let edit = document.createElement("i");
+		edit.className = "fa-solid fa-chevron-up edit-icons";
+		member.appendChild(edit);
+
+		// Click event for edit button
+		edit.addEventListener("click", function (event) {
+			event.stopPropagation();
+			toggleMenu(edit);
+		});
+
+		// Function to toggle menu visibility
+		function toggleMenu(button) {
+			let menu = button.nextElementSibling;
+			if (menu.style.display === "none" || menu.style.display === "") {
+				menu.style.display = "block";
+			} else {
+				menu.style.display = "none";
+			}
+		}
+
+		// Create and append menu options
+		let menu = document.createElement("div");
+		menu.className = "options-menu";
+		menu.style.display = "none";
+
+		// Create a ul element
+		const ulElement = document.createElement("ul");
+
+		const liElement1 = document.createElement("li");
+		const button1 = document.createElement("button");
+		button1.textContent = "Greate group admin";
+		liElement1.appendChild(button1);
+		ulElement.appendChild(liElement1);
+
+		const liElement2 = document.createElement("li");
+		const button2 = document.createElement("button");
+		button2.textContent = "Remove user";
+		liElement2.appendChild(button2);
+		ulElement.appendChild(liElement2);
+
+		// Append ul to div
+		menu.appendChild(ulElement);
+
+		member.appendChild(menu);
+
+		// Click anywhere to close menu
+		document.addEventListener("click", function (event) {
+			if (!menu.contains(event.target) && event.target !== edit) {
+				menu.style.display = "none";
+			}
+		});
+
+		//menu button function
+		button1.addEventListener("click", async (e) => {
+			const member = e.target.closest(".member");
+			// Find the h3 element within the member element
+			const h3Element = member.querySelector("h3");
+			// Get the id attribute of the h3 element
+			const id = h3Element.id;
+
+            console.log(`Clicked on button1, ID: ${id}`);
+
+            try {
+                console.log(localStorage.getItem("accessToken"), localStorage.getItem("groupId"), id);
+                const response = await axios.put(`http://localhost:4000/group/make-admin/${localStorage.getItem("groupId")}/${id}`);
+                location.reload();
+            } catch (error) {
+                console.log("Error in updating user as admin", error);
+            }
+            
+
+			menu.style.display = "none";
+		});
+
+		button2.addEventListener("click", (e) => {
+			const member = e.target.closest(".member");
+			// Find the h3 element within the member element
+			const h3Element = member.querySelector("h3");
+			// Get the id attribute of the h3 element
+			const id = h3Element.id;
+
+            console.log(`Clicked on button2, ID: ${id}`);
+            
+			menu.style.display = "none";
+		});
+	}
 
 	document.getElementById("group-members1").appendChild(member);
 }

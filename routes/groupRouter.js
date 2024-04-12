@@ -11,7 +11,6 @@ router.get("/get-messages/:groupId", requiredUser, groupController.getGroupMessa
 router.post("/send-message/:reciepientId", requiredUser, groupController.sendMessage);
 router.get("/group-users/:groupId", requiredUser, groupController.getGroupUsers);
 router.get("/get-single-user/:userId", requiredUser, groupController.getSingleUser);
-
-router.get("/get-usersToUpdate/:groupId",requiredUser, groupController.getUsersToUpdate);
+router.put("/make-admin/:groupId/:userId", groupController.makeUserAdmin);
 
 module.exports = router;

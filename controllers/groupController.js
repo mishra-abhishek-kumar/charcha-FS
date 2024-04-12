@@ -134,10 +134,15 @@ const getSingleUser = async (req, res) => {
 	}
 };
 
-const getUsersToUpdate = async (req, res) => {
+const makeUserAdmin = async (req, res) => {
+
     try {
-        const response = await User.findAll();
-        return res.status(200).json({response});
+        const userId = parseInt(req.params.userId);
+		const groupId = parseInt(req.params.groupId);
+
+        const adminUser = await UserGroup.update({isAdmin: true}, {where: {groupId: groupId, userId: userId}});
+        
+        return res.status(200).json({adminUser});
     } catch (error) {
         console.log("Error in getUsersToUpdate controller", error.message);
         res.status(500).json({ error: "Internal server error" });
@@ -155,5 +160,5 @@ module.exports = {
 	sendMessage,
 	getGroupUsers,
 	getSingleUser,
-	getUsersToUpdate,
+	makeUserAdmin,
 };
