@@ -11,6 +11,8 @@ document
 				},
 			});
 
+            console.log(response.data.users);
+
 			for (let i = 0; i < response.data.users.length; i++) {
 				displayUsersforGroup(response.data.users[i]);
 			}
@@ -20,15 +22,35 @@ document
 	});
 
 function displayUsersforGroup(user) {
-	let label = document.createElement("label");
-	label.innerHTML = user.name;
+	const userDiv = document.createElement("div");
+    userDiv.className = 'user-div'
 
-	let input = document.createElement("input");
-	input.type = "checkbox";
-	input.setAttribute("id", user.id);
+	const userCheckbox = document.createElement("input");
+	userCheckbox.type = "checkbox";
+	userCheckbox.id = user.id;
+	userCheckbox.name = "users";
+	userCheckbox.value = user.id;
 
-	label.appendChild(input);
-	users.appendChild(label);
+	const userLabel = document.createElement("label");
+	userLabel.htmlFor = `user-${user.id}`;
+	userLabel.textContent = user.name;
+
+	const adminCheckbox = document.createElement("input");
+	adminCheckbox.type = "checkbox";
+	adminCheckbox.id = user.id;
+	adminCheckbox.name = "admins";
+	adminCheckbox.value = user.id;
+
+	const adminLabel = document.createElement("label");
+	adminLabel.htmlFor = `admin-${user.id}`;
+	adminLabel.textContent = "Admin";
+
+	userDiv.appendChild(userCheckbox);
+	userDiv.appendChild(userLabel);
+	userDiv.appendChild(adminCheckbox);
+	userDiv.appendChild(adminLabel);
+
+	users.appendChild(userDiv);
 }
 
 const createGroupForm = document.getElementById("creategroup-form");
@@ -37,15 +59,22 @@ createGroupForm.addEventListener("submit", async (e) => {
 
 	// Get the text input value
 	const groupName = document.getElementById("group-name").value;
-	const groupDescription =
-		document.getElementById("group-description").value || "";
+	const groupDescription = document.getElementById("group-description").value || "";
 
 	// Get the IDs of the checked checkboxes
-	const checkedCheckboxes = document.querySelectorAll("input:checked");
+	const selectedUsers = document.querySelectorAll('input[name="users"]:checked');
+    const selectedAdmins = document.querySelectorAll('input[name="admins"]:checked');
 
-	const checkedIds = Array.from(checkedCheckboxes).map(
-		(checkbox) => checkbox.id
-	);
+	// const checkedIds = Array.from(checkedCheckboxes).map(
+	// 	(checkbox) => checkbox.id
+	// );
+
+    const userData = Array.from(selectedUsers).map(user => {
+        return {
+            id: parseInt(user.value),
+            isAdmin: Array.from(selectedAdmins).some(admin => admin.value === user.value)
+        };
+    });
 
 	try {
 		const createGroupResponse = await axios.post(
@@ -65,7 +94,7 @@ createGroupForm.addEventListener("submit", async (e) => {
 	try {
 		const createGroupUsersResponse = await axios.post(
 			`http://localhost:4000/group/create-group-users/${groupId}`,
-			{ usersIds: checkedIds },
+			{ usersIds: userData },
 			{
 				headers: {
 					Authorization: localStorage.getItem("accessToken"),

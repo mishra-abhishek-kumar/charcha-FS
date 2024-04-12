@@ -12,4 +12,6 @@ router.post("/send-message/:reciepientId", requiredUser, groupController.sendMes
 router.get("/group-users/:groupId", requiredUser, groupController.getGroupUsers);
 router.get("/get-single-user/:userId", requiredUser, groupController.getSingleUser);
 
+router.get("/get-usersToUpdate/:groupId",requiredUser, groupController.getUsersToUpdate);
+
 module.exports = router;

@@ -1,5 +1,5 @@
 const Group = require("../models/Group");
-const userGroup = require("../models/UserGroup");
+const UserGroup = require("../models/UserGroup");
 const Message = require("../models/Message");
 const User = require("../models/User");
 
@@ -19,7 +19,7 @@ const createGroup = async (req, res) => {
 
 const createGroupUSers = async (req, res) => {
 	const userIds = req.body.usersIds;
-	userIds.push(req.id);
+	userIds.push({ id: req.id, isAdmin: true });
 	const groupId = req.params.groupId;
 
 	if (!userIds) {
@@ -27,15 +27,14 @@ const createGroupUSers = async (req, res) => {
 	}
 
 	try {
-		// Iterate over the userIds array and create a UserGroup entry for each
-		const creationPromises = userIds.map((userId) =>
-			userGroup.create({ userId, groupId, isAdmin: userId === req.id })
-		);
+		for (let i = 0; i < userIds.length; i++) {
+			await UserGroup.create({
+				userId: userIds[i].id,
+				groupId,
+				isAdmin: userIds[i].isAdmin,
+			});
+		}
 
-		// Wait for all the UserGroup entries to be created
-		await Promise.all(creationPromises);
-
-		// Send a response back
 		return res
 			.status(201)
 			.json({ success: true, message: "users added to the group" });
@@ -47,7 +46,7 @@ const createGroupUSers = async (req, res) => {
 
 const getUserGroups = async (req, res) => {
 	try {
-		const usergroups = await userGroup.findAll({ where: { userId: req.id } });
+		const usergroups = await UserGroup.findAll({ where: { userId: req.id } });
 		return res.status(200).json({ usergroups });
 	} catch (error) {
 		console.log("Error in getUserGroups controller", error.message);
@@ -70,7 +69,7 @@ const isAdmin = async (req, res) => {
 		const userId = parseInt(req.params.userId);
 		const groupId = parseInt(req.params.groupId);
 
-		const isAdmin = await userGroup.findAll({
+		const isAdmin = await UserGroup.findAll({
 			where: { groupId: groupId, isAdmin: 1, userId: userId },
 		});
 
@@ -114,7 +113,7 @@ const sendMessage = async (req, res) => {
 
 const getGroupUsers = async (req, res) => {
 	try {
-		const groupUsers = await userGroup.findAll({
+		const groupUsers = await UserGroup.findAll({
 			where: { groupId: req.params.groupId },
 		});
 
@@ -126,14 +125,25 @@ const getGroupUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-    try {
-        const user = await User.findByPk(req.params.userId);
-        return res.status(200).json({user});
-    } catch (error) {
-        console.log("Error in getSingleUsers from group controller", error.message);
+	try {
+		const user = await User.findByPk(req.params.userId);
+		return res.status(200).json({ user });
+	} catch (error) {
+		console.log("Error in getSingleUsers from group controller", error.message);
 		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+const getUsersToUpdate = async (req, res) => {
+    try {
+        const response = await User.findAll();
+        return res.status(200).json({response});
+    } catch (error) {
+        console.log("Error in getUsersToUpdate controller", error.message);
+        res.status(500).json({ error: "Internal server error" });
     }
-}
+};
+
 
 module.exports = {
 	createGroup,
@@ -144,5 +154,6 @@ module.exports = {
 	getGroupMessages,
 	sendMessage,
 	getGroupUsers,
-    getSingleUser
+	getSingleUser,
+	getUsersToUpdate,
 };

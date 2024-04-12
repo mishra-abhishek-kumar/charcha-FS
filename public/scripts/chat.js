@@ -12,6 +12,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 		//hiding create-group form
 		document.querySelector(".createGroup-container").style.display = "none";
 		document.querySelector(".groupInfo-container").style.display = " none";
+		document.querySelector(".groupEdit-container").style.display = " none";
 
 		//fetching all individual users
 		const users = await axios.get(`http://localhost:4000/chat/get-users`, {
