@@ -55,6 +55,8 @@ groupInfoBtn.addEventListener("click", async (e) => {
 
 		const { groupUsers } = fetchingGroupUsers.data;
 
+		console.log(groupUsers);
+
 		displayGroupInformation(
 			groupUsers.length,
 			localStorage.getItem("groupName")
@@ -268,13 +270,16 @@ function displayGroupUsers1(data, isAdmin) {
 			// Get the id attribute of the h3 element
 			const id = h3Element.id;
 
-            try {
-                const response = await axios.put(`http://localhost:4000/group/make-admin/${localStorage.getItem("groupId")}/${id}`);
-                location.reload();
-            } catch (error) {
-                console.log("Error in updating user as admin", error);
-            }
-            
+			try {
+				const response = await axios.put(
+					`http://localhost:4000/group/make-admin/${localStorage.getItem(
+						"groupId"
+					)}/${id}`
+				);
+				location.reload();
+			} catch (error) {
+				console.log("Error in updating user as admin", error);
+			}
 
 			menu.style.display = "none";
 		});
@@ -286,13 +291,17 @@ function displayGroupUsers1(data, isAdmin) {
 			// Get the id attribute of the h3 element
 			const id = h3Element.id;
 
-            try {
-                const response = await axios.delete(`http://localhost:4000/group/remove-user/${localStorage.getItem("groupId")}/${id}`);
-                location.reload();
-            } catch (error) {
-                console.log("Error in removing user from group", error);
-            }
-            
+			try {
+				const response = await axios.delete(
+					`http://localhost:4000/group/remove-user/${localStorage.getItem(
+						"groupId"
+					)}/${id}`
+				);
+				location.reload();
+			} catch (error) {
+				console.log("Error in removing user from group", error);
+			}
+
 			menu.style.display = "none";
 		});
 	}
@@ -306,4 +315,108 @@ closeGroupEditBtn.addEventListener("click", (e) => {
 	document.getElementById("message").style.width = "59vw";
 	document.getElementById("group-members1").innerHTML = "";
 	document.getElementById("groupImg-Name1").innerHTML = "";
+});
+
+//Add new members to group
+document.getElementById("add-user").addEventListener("click", async (e) => {
+	try {
+		const fetchingAlreadyExistingGroupUsers = await axios.get(
+			`http://localhost:4000/group/group-users/${localStorage.getItem("groupId")}`,
+			{
+				headers: {
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			}
+		);
+        //fetching all the allready existing userIds
+		const userData = fetchingAlreadyExistingGroupUsers.data.groupUsers.map((user) => user.userId);
+
+        const gettingRemainingUsers = await axios.post(
+			`http://localhost:4000/group/get-moreuser`,
+			{ usersIds: userData },
+			{
+				headers: {
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			}
+		);
+
+        if(gettingRemainingUsers.data.remainingUsers.length > 0) {
+            document.querySelector(".addNewUserToGroup-container").style.display = " block";
+
+            for(let i=0; i<gettingRemainingUsers.data.remainingUsers.length; i++) {
+                displayRemainingUsers(gettingRemainingUsers.data.remainingUsers[i]);
+            }
+        }
+	} catch (error) {}
+});
+
+function displayRemainingUsers(user) {
+    const userDiv = document.createElement("div");
+    userDiv.className = 'user-div'
+
+	const userCheckbox = document.createElement("input");
+	userCheckbox.type = "checkbox";
+	userCheckbox.id = user.id;
+	userCheckbox.name = "users";
+	userCheckbox.value = user.id;
+
+	const userLabel = document.createElement("label");
+	userLabel.htmlFor = `user-${user.id}`;
+	userLabel.textContent = user.name;
+
+	const adminCheckbox = document.createElement("input");
+	adminCheckbox.type = "checkbox";
+	adminCheckbox.id = user.id;
+	adminCheckbox.name = "admins";
+	adminCheckbox.value = user.id;
+
+	const adminLabel = document.createElement("label");
+	adminLabel.htmlFor = `admin-${user.id}`;
+	adminLabel.textContent = "Admin";
+
+	userDiv.appendChild(userCheckbox);
+	userDiv.appendChild(userLabel);
+	userDiv.appendChild(adminCheckbox);
+	userDiv.appendChild(adminLabel);
+
+    document.getElementById('users1').appendChild(userDiv);
+}
+
+const addNewUserForm = document.getElementById('addnewusertogroup-form');
+addNewUserForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Get the IDs of the checked checkboxes
+	const selectedUsers = document.querySelectorAll('input[name="users"]:checked');
+    const selectedAdmins = document.querySelectorAll('input[name="admins"]:checked');
+
+    const userData = Array.from(selectedUsers).map(user => {
+        return {
+            id: parseInt(user.value),
+            isAdmin: Array.from(selectedAdmins).some(admin => admin.value === user.value)
+        };
+    });
+
+    try {
+		const addNewUsers = await axios.post(
+			`http://localhost:4000/group/add-moreuser/${localStorage.getItem('groupId')}`,
+			{ usersIds: userData },
+			{
+				headers: {
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			}
+		);
+        location.reload();
+	} catch (error) {
+		console.log("Error in group users creation FrontEnd", error);
+	}
+
+    document.querySelector(".addNewUserToGroup-container").style.display = " none";
+})
+
+document.getElementById("cancelBtn1").addEventListener("click", function () {
+	document.querySelector(".addNewUserToGroup-container").style.display = " none";
+	location.reload();
 });

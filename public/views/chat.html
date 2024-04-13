@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <!-- Display all users -->
     <div class="left-container">
         <div class="top-bar">
             <img class="self-profile" src="https://avatar.iran.liara.run/public" alt="profilePicture">
@@ -38,6 +39,7 @@
         </div>
     </div>
 
+    <!-- Welcome page for login user -->
     <div class="welcome-right-container" id="welcome-right-container">
         <div class="app-logo">
             <img src="../assets/AppLogo.png" alt="AppLogo">
@@ -47,6 +49,7 @@
         <p><i class="fa-solid fa-lock"></i> Your personal messages are end-to-end encrypted</p>
     </div>
 
+    <!-- Chat area for user/group -->
     <div class="message-right-container" id="message-right-container">
         <div class="top-bar chat-top-bar">
             <div class="group-info">
@@ -79,6 +82,7 @@
         </div>
     </div>
 
+    <!-- Form to create group -->
     <div class="createGroup-container">
         <h2>Create new group</h2>
         <form class="creategroup-form" id="creategroup-form">
@@ -95,6 +99,7 @@
         </form>
     </div>
 
+    <!-- To displays all the users of the group -->
     <div class="groupInfo-container" id="group-info-container">
         <div class="top-bar group-info-topbar">
             <button class="closeGroupInfo" id="close-groupInfo"><i class="fa-solid fa-xmark"></i></button>
@@ -118,6 +123,7 @@
         </div>
     </div>
 
+    <!-- Display all users to edit the user -->
     <div class="groupEdit-container" id="group-edit-container">
         <div class="top-bar group-info-topbar">
             <button class="closeGroupInfo" id="close-groupEdit"><i class="fa-solid fa-xmark"></i></button>
@@ -146,6 +152,18 @@
                 </div> -->
             </div>
         </div>
+    </div>
+
+    <!-- Form to add new member to the group -->
+    <div class="addNewUserToGroup-container">
+        <h2>Select Users</h2>
+        <form class="addnewusertogroup-form" id="addnewusertogroup-form">
+            <div class="users" id="users1">
+            </div>
+
+            <input class="submitBtn" id="submitBtn" type="submit" value="Add users">
+            <button type="button" class="cancelBtn" id="cancelBtn1">Cancel</button>
+        </form>
     </div>
 
     <script src="https://kit.fontawesome.com/3c20a37bb5.js" crossorigin="anonymous"></script>

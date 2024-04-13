@@ -11,8 +11,6 @@ document
 				},
 			});
 
-            console.log(response.data.users);
-
 			for (let i = 0; i < response.data.users.length; i++) {
 				displayUsersforGroup(response.data.users[i]);
 			}
@@ -64,10 +62,6 @@ createGroupForm.addEventListener("submit", async (e) => {
 	// Get the IDs of the checked checkboxes
 	const selectedUsers = document.querySelectorAll('input[name="users"]:checked');
     const selectedAdmins = document.querySelectorAll('input[name="admins"]:checked');
-
-	// const checkedIds = Array.from(checkedCheckboxes).map(
-	// 	(checkbox) => checkbox.id
-	// );
 
     const userData = Array.from(selectedUsers).map(user => {
         return {

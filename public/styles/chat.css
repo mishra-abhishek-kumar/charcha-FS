@@ -460,7 +460,8 @@ label {
 }
 
 /* GroupInfo */
-.groupInfo-container, .groupEdit-container {
+.groupInfo-container,
+.groupEdit-container {
     display: flex;
     flex-direction: column;
     background-color: #111B21;
@@ -619,3 +620,77 @@ label {
     background-color: #233138;
 }
 
+/* To add new users to group */
+/* Style the container */
+.addNewUserToGroup-container {
+    background-color: #111B21;
+    position: absolute;
+    top: 10rem;
+    left: 30rem;
+    color: white;
+}
+
+/* Style the form header */
+.addNewUserToGroup-container h2 {
+    font-weight: 300;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: -10px;
+}
+
+/* Style the form elements */
+.addnewusertogroup-form {
+    min-width: 500px;
+    max-width: 800px;
+    padding: 2rem;
+    border-radius: 5px;
+}
+
+.user-div {
+    display: flex;
+}
+
+input[type="checkbox"] {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    accent-color: rgb(40, 143, 40);
+    -ms-transform: scale(1.5);
+    /* IE */
+    -moz-transform: scale(1.5);
+    /* FF */
+    -webkit-transform: scale(1.5);
+    /* Safari and Chrome */
+    -o-transform: scale(1.5);
+    /* Opera */
+    transform: scale(1.5);
+    padding: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 300;
+}
+
+.submitBtn {
+    background-color: #0A80FF;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 10px;
+    font-weight: 300;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.cancelBtn {
+    background-color: red;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 10px;
+    font-weight: 300;
+    font-size: small;
+    margin-top: 10px;
+}

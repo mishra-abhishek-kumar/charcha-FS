@@ -13,5 +13,7 @@ router.get("/group-users/:groupId", requiredUser, groupController.getGroupUsers)
 router.get("/get-single-user/:userId", requiredUser, groupController.getSingleUser);
 router.put("/make-admin/:groupId/:userId", groupController.makeUserAdmin);
 router.delete("/remove-user/:groupId/:userId", groupController.removeUserFromGroup);
+router.post("/get-moreuser/", requiredUser, groupController.getMoreUser);
+router.post("/add-moreuser/:groupId", requiredUser, groupController.addMoreUserToGroup);
 
 module.exports = router;

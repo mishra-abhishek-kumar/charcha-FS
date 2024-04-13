@@ -2,6 +2,7 @@ const Group = require("../models/Group");
 const UserGroup = require("../models/UserGroup");
 const Message = require("../models/Message");
 const User = require("../models/User");
+const { Op } = require('sequelize');
 
 const createGroup = async (req, res) => {
 	try {
@@ -162,6 +163,51 @@ const removeUserFromGroup = async (req, res) => {
     }
 }
 
+const getMoreUser = async (req, res) => {
+    const userIds = req.body.usersIds;
+
+	if (!userIds) {
+		return res.status(400).send("userIds not provided");
+	}
+
+    try {
+        const remainingUsers = await User.findAll({
+			where: { id: {[Op.notIn]: userIds} },
+		});
+
+        return res.status(200).json({remainingUsers})
+    } catch (error) {
+        console.log("Error in getMoreUser controller", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+const addMoreUserToGroup = async (req, res) => {
+	const userIds = req.body.usersIds;
+	const groupId = req.params.groupId;
+
+	if (!userIds) {
+		return res.status(400).send("userIds not provided");
+	}
+
+	try {
+		for (let i = 0; i < userIds.length; i++) {
+			await UserGroup.create({
+				userId: userIds[i].id,
+				groupId,
+				isAdmin: userIds[i].isAdmin,
+			});
+		}
+
+		return res
+			.status(201)
+			.json({ success: true, message: "users added to the group" });
+	} catch (error) {
+		console.log("Error in createGroupUsers controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
 module.exports = {
 	createGroup,
 	createGroupUSers,
@@ -173,5 +219,7 @@ module.exports = {
 	getGroupUsers,
 	getSingleUser,
 	makeUserAdmin,
-    removeUserFromGroup
+    removeUserFromGroup,
+    getMoreUser,
+    addMoreUserToGroup
 };
