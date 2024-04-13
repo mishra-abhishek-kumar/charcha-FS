@@ -257,10 +257,16 @@ button {
     gap: 1rem;
 }
 
-.send-chat a {
-    font-size: 1.5rem;
+.custom-file-input {
+    display: none;
+    /* Hide the actual file input */
+}
+
+.custom-button {
     color: #8f9daf;
+    font-size: 1.5rem;
     cursor: pointer;
+    display: inline-block;
 }
 
 .message-form {
@@ -290,16 +296,6 @@ button {
     cursor: pointer;
 }
 
-/* 
-.chat-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-bottom: 10px;
-    max-height: 75vh;
-    overflow: auto;
-} */
-
 .messages-sender {
     padding: 0.1rem 5rem 0.1rem 4.5rem;
     display: flex;
@@ -327,24 +323,59 @@ button {
     font-weight: 300;
 }
 
-.messages-style-sender {
+.messages-style-receiver-group {
     color: whitesmoke;
     list-style: none;
-    padding: 5px;
-    background-color: #005c4b;
+    background-color: #3a4247;
     border-radius: 10px;
-    max-width: max-content;
-    margin-bottom: 2px;
     font-size: small;
     font-weight: 300;
 }
 
+.singleMessage-receiver {
+    background-color: #3a4247;
+    padding: 0px 5px 5px 5px;
+    border-radius: 10px;
+    max-width: max-content;
+}
+
+.messages-style-sender {
+    color: whitesmoke;
+    list-style: none;
+    background-color: #005c4b;
+    border-radius: 10px;
+    font-size: small;
+    font-weight: 300;
+    padding: 5px;
+}
+
+.messages-style-sender-group {
+    color: whitesmoke;
+    list-style: none;
+    background-color: #005c4b;
+    border-radius: 10px;
+    font-size: small;
+    font-weight: 300;
+}
+
+.singleMessage-sender {
+    background-color: #005c4b;
+    padding: 0px 5px 5px 5px;
+    border-radius: 10px;
+}
+
+.message-name {
+    padding-top: 3px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: rgb(250, 132, 132);
+}
+
 .message-time {
+    display: flex;
+    justify-content: flex-end;
     font-size: 0.6rem;
     font-weight: 500;
-    position: relative;
-    top: 3px;
-    padding-left: 0.4rem;
     color: white;
 }
 

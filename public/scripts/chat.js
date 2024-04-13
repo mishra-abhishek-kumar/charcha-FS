@@ -13,7 +13,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 		document.querySelector(".createGroup-container").style.display = "none";
 		document.querySelector(".groupInfo-container").style.display = " none";
 		document.querySelector(".groupEdit-container").style.display = " none";
-		document.querySelector(".addNewUserToGroup-container").style.display = " none";
+		document.querySelector(".addNewUserToGroup-container").style.display =
+			" none";
 
 		//fetching all individual users
 		const users = await axios.get(`http://localhost:4000/chat/get-users`, {
@@ -129,14 +130,14 @@ chats.addEventListener("click", async (e) => {
 			document.getElementById("chat-username").innerHTML = reciepientUser.name;
 
 			for (let i = 0; i < chats.length; i++) {
-				displayMessages(chats[i]);
+				displayMessages(chats[i], chatType);
 			}
 		} catch (error) {
 			console.log("Error in fetching chats", error);
 		}
 	} else if (chatType == "group") {
 		document.getElementById("edit-button").style.display = "block";
-        localStorage.setItem("groupId", chatId);
+		localStorage.setItem("groupId", chatId);
 		try {
 			const isAdmin = await axios.get(
 				`http://localhost:4000/group/isAdmin/${localStorage.getItem(
@@ -166,10 +167,10 @@ chats.addEventListener("click", async (e) => {
 
 			const { chats, reciepientGroup } = response.data;
 			document.getElementById("chat-username").innerHTML = reciepientGroup.name;
-            localStorage.setItem("groupName", reciepientGroup.name);
+			localStorage.setItem("groupName", reciepientGroup.name);
 
 			for (let i = 0; i < chats.length; i++) {
-				displayMessages(chats[i]);
+				displayMessages(chats[i], chatType);
 			}
 		} catch (error) {
 			console.log("Error in fetching chats", error);
@@ -177,37 +178,80 @@ chats.addEventListener("click", async (e) => {
 	}
 });
 
-function displayMessages(chats) {
+function displayMessages(chats, chatType) {
 	if (chats.sentFrom === localStorage.getItem("userName")) {
 		const ul = document.createElement("ul");
 		ul.className = "messages-sender";
 
-		const li = document.createElement("li");
-		li.className = "messages-style-sender";
-		li.innerText = chats.message;
+		if (chatType == "group") {
+			const message = document.createElement("div");
+			message.className = "singleMessage-sender";
 
-		const span = document.createElement("span");
-		span.className = "message-time";
-		span.innerText = chats.messageTime;
+			const sentFrom = document.createElement("h6");
+			sentFrom.className = "message-name";
+			sentFrom.innerText = chats.sentFrom;
 
-		li.appendChild(span);
-		ul.appendChild(li);
+			const li = document.createElement("li");
+			li.className = "messages-style-sender-group";
+			li.innerText = chats.message;
+
+			const span = document.createElement("div");
+			span.className = "message-time";
+			span.innerText = chats.messageTime;
+
+			message.appendChild(sentFrom);
+			message.appendChild(li);
+			message.appendChild(span);
+			ul.appendChild(message);
+		} else {
+			const li = document.createElement("li");
+			li.className = "messages-style-sender";
+			li.innerText = chats.message;
+
+			const span = document.createElement("span");
+			span.className = "message-time";
+			span.innerText = chats.messageTime;
+
+			li.appendChild(span);
+			ul.appendChild(li);
+		}
 
 		chatSection.appendChild(ul);
 	} else {
 		const ul = document.createElement("ul");
 		ul.className = "messages-receiver";
+		if (chatType == "group") {
+			const message = document.createElement("div");
+			message.className = "singleMessage-receiver";
 
-		const li = document.createElement("li");
-		li.className = "messages-style-receiver";
-		li.innerText = chats.message;
+			const sentFrom = document.createElement("h6");
+			sentFrom.className = "message-name";
+			sentFrom.innerText = chats.sentFrom;
 
-		const span = document.createElement("span");
-		span.className = "message-time";
-		span.innerText = chats.messageTime;
+			const li = document.createElement("li");
+			li.className = "messages-style-receiver-group";
+			li.innerText = chats.message;
 
-		li.appendChild(span);
-		ul.appendChild(li);
+			const span = document.createElement("div");
+			span.className = "message-time";
+			span.innerText = chats.messageTime;
+
+			message.appendChild(sentFrom);
+			message.appendChild(li);
+			message.appendChild(span);
+			ul.appendChild(message);
+		} else {
+			const li = document.createElement("li");
+			li.className = "messages-style-receiver";
+			li.innerText = chats.message;
+
+			const span = document.createElement("span");
+			span.className = "message-time";
+			span.innerText = chats.messageTime;
+
+			li.appendChild(span);
+			ul.appendChild(li);
+		}
 
 		chatSection.appendChild(ul);
 	}
@@ -261,7 +305,7 @@ chatForm.addEventListener("submit", async (e) => {
 });
 
 //user logout
-document.getElementById('logOut').addEventListener('click', (e) => {
-    localStorage.clear();
-    window.location.href = 'http://localhost:4000/views/landing.html';
-})
+document.getElementById("logOut").addEventListener("click", (e) => {
+	localStorage.clear();
+	window.location.href = "http://localhost:4000/views/landing.html";
+});
