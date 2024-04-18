@@ -1,11 +1,22 @@
+const socket = io();
 const chats = document.getElementById("chats");
 const welcomeMsg = document.getElementById("welcome-msg");
 const formMessage = document.getElementById("message");
 const chatForm = document.getElementById("chat-form");
 const chatSection = document.getElementById("chat-section");
 
+
 let chatType;
 let chatId;
+
+socket.on('user-socket-ID', (socketId) => {
+    localStorage.setItem("socketId", socketId);
+})
+
+socket.on('chat-message', (chats) => {
+    displayMessages(chats, 'user');
+    // window.scrollTo(0, document.body.scrollHeight);
+})
 
 window.addEventListener("DOMContentLoaded", async () => {
 	try {
@@ -297,12 +308,16 @@ chatForm.addEventListener("submit", async (e) => {
 		// if (response.status == "200") {
 		// 	location.reload();
 		// }
+        console.log("Sent Message", response.data.chat);
+
+        socket.emit("user-chat-message", response.data.chat, localStorage.getItem('socketId'));
 
 		formMessage.value = "";
 	} catch (error) {
 		console.log("Error in sending message", error);
 	}
 });
+
 
 //user logout
 document.getElementById("logOut").addEventListener("click", (e) => {
