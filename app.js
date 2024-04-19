@@ -9,6 +9,10 @@ dotenv.config({ path: "./.env" });
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
+//import required to run CRON job
+const { midnightJob } = require('./controllers/cronJob');
+midnightJob.start();
+
 //import required to parse multipart/form-data
 const multer = require("multer");
 const upload = multer(); // Initialize multer
