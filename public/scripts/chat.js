@@ -1,22 +1,13 @@
-const socket = io();
 const chats = document.getElementById("chats");
 const welcomeMsg = document.getElementById("welcome-msg");
 const formMessage = document.getElementById("message");
 const chatForm = document.getElementById("chat-form");
 const chatSection = document.getElementById("chat-section");
 
-
 let chatType;
 let chatId;
 
-socket.on('user-socket-ID', (socketId) => {
-    localStorage.setItem("socketId", socketId);
-})
-
-socket.on('chat-message', (chats) => {
-    displayMessages(chats, 'user');
-    // window.scrollTo(0, document.body.scrollHeight);
-})
+chatForm.addEventListener("submit", sendChats);
 
 window.addEventListener("DOMContentLoaded", async () => {
 	try {
@@ -269,7 +260,7 @@ function displayMessages(chats, chatType) {
 }
 
 //function to send message
-chatForm.addEventListener("submit", async (e) => {
+async function sendChats(e) {
 	e.preventDefault();
 	try {
 		let currentDate = new Date();
@@ -308,16 +299,40 @@ chatForm.addEventListener("submit", async (e) => {
 		// if (response.status == "200") {
 		// 	location.reload();
 		// }
-        console.log("Sent Message", response.data.chat);
-
-        socket.emit("user-chat-message", response.data.chat, localStorage.getItem('socketId'));
 
 		formMessage.value = "";
 	} catch (error) {
 		console.log("Error in sending message", error);
 	}
-});
+}
 
+//handling multimedia
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+	const file = e.target.files[0];
+	if (!file) {
+		return;
+	}
+
+	const formData = new FormData();
+	formData.append("file", file);
+
+	try {
+		const response = await axios.post(
+			"http://localhost:4000/chat/uploadToS3",
+			formData,
+			{
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			}
+		);
+
+		console.log(response.data); // Log the response from the server
+	} catch (error) {
+		console.error("Error uploading file:", error);
+	}
+});
 
 //user logout
 document.getElementById("logOut").addEventListener("click", (e) => {

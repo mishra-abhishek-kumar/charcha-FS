@@ -2,7 +2,7 @@ const Group = require("../models/Group");
 const UserGroup = require("../models/UserGroup");
 const Message = require("../models/Message");
 const User = require("../models/User");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 
 const createGroup = async (req, res) => {
 	try {
@@ -136,51 +136,56 @@ const getSingleUser = async (req, res) => {
 };
 
 const makeUserAdmin = async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const groupId = parseInt(req.params.groupId);
+	const userId = parseInt(req.params.userId);
+	const groupId = parseInt(req.params.groupId);
 
-    try {
-        const adminUser = await UserGroup.update({isAdmin: true}, {where: {groupId: groupId, userId: userId}});
+	try {
+		const adminUser = await UserGroup.update(
+			{ isAdmin: true },
+			{ where: { groupId: groupId, userId: userId } }
+		);
 
-        return res.status(200).json({adminUser});
-    } catch (error) {
-        console.log("Error in getUsersToUpdate controller", error.message);
-        res.status(500).json({ error: "Internal server error" });
-    }
+		return res.status(200).json({ adminUser });
+	} catch (error) {
+		console.log("Error in getUsersToUpdate controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
 };
 
 const removeUserFromGroup = async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const groupId = parseInt(req.params.groupId);
+	const userId = parseInt(req.params.userId);
+	const groupId = parseInt(req.params.groupId);
 
-    try {
-        const adminUser = await UserGroup.destroy({where: {groupId: groupId, userId: userId}});
+	try {
+		const adminUser = await UserGroup.destroy({
+			where: { groupId: groupId, userId: userId },
+		});
 
-        return res.status(200).json({adminUser});
-    } catch (error) {
-        console.log("Error in removeUserFromGroup controller", error.message);
-        res.status(500).json({ error: "Internal server error" });
-    }
-}
+		return res.status(200).json({ adminUser });
+	} catch (error) {
+		console.log("Error in removeUserFromGroup controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
 
 const getMoreUser = async (req, res) => {
-    const userIds = req.body.usersIds;
+	const userIds = req.body.usersIds;
 
 	if (!userIds) {
 		return res.status(400).send("userIds not provided");
 	}
 
-    try {
-        const remainingUsers = await User.findAll({
-			where: { id: {[Op.notIn]: userIds} },
+	try {
+		const remainingUsers = await User.findAll({
+			where: { id: { [Op.notIn]: userIds } },
 		});
 
-        return res.status(200).json({remainingUsers})
-    } catch (error) {
-        console.log("Error in getMoreUser controller", error.message);
-        res.status(500).json({ error: "Internal server error" });
-    }
-}
+		return res.status(200).json({ remainingUsers });
+	} catch (error) {
+		console.log("Error in getMoreUser controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
 
 const addMoreUserToGroup = async (req, res) => {
 	const userIds = req.body.usersIds;
@@ -219,7 +224,7 @@ module.exports = {
 	getGroupUsers,
 	getSingleUser,
 	makeUserAdmin,
-    removeUserFromGroup,
-    getMoreUser,
-    addMoreUserToGroup
+	removeUserFromGroup,
+	getMoreUser,
+	addMoreUserToGroup,
 };
