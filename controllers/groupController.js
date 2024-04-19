@@ -213,6 +213,24 @@ const addMoreUserToGroup = async (req, res) => {
 	}
 };
 
+const sendImageAsMessage = async (req, res) => {
+    const { userName, imageUrl, messageTime, groupId } = req.body;
+	try {
+		const chat = await Message.create({
+			sentFrom: userName,
+			imageUrl: imageUrl,
+			messageTime: messageTime,
+			groupId: groupId,
+			senderId: req.id,
+			reciepientId: req.params.reciepientId,
+		});
+		return res.status(200).json({ chat });
+	} catch (error) {
+		console.log("Error in sending group message controller", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+}
+
 module.exports = {
 	createGroup,
 	createGroupUSers,
@@ -227,4 +245,5 @@ module.exports = {
 	removeUserFromGroup,
 	getMoreUser,
 	addMoreUserToGroup,
+    sendImageAsMessage,
 };

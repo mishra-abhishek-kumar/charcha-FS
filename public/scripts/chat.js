@@ -131,6 +131,8 @@ chats.addEventListener("click", async (e) => {
 			const { chats, reciepientUser } = response.data;
 			document.getElementById("chat-username").innerHTML = reciepientUser.name;
 
+            console.log(chats);
+
 			for (let i = 0; i < chats.length; i++) {
 				displayMessages(chats[i], chatType);
 			}
@@ -195,7 +197,15 @@ function displayMessages(chats, chatType) {
 
 			const li = document.createElement("li");
 			li.className = "messages-style-sender-group";
-			li.innerText = chats.message;
+			
+            if(chats.message !== null) {
+                li.innerText = chats.message;
+            } else {
+                const img = document.createElement('img');
+                img.src = chats.imageUrl;
+                img.className = 'chat-Img'
+                li.appendChild(img);
+            }
 
 			const span = document.createElement("div");
 			span.className = "message-time";
@@ -208,7 +218,15 @@ function displayMessages(chats, chatType) {
 		} else {
 			const li = document.createElement("li");
 			li.className = "messages-style-sender";
-			li.innerText = chats.message;
+
+            if(chats.message !== null) {
+                li.innerText = chats.message;
+            } else {
+                const img = document.createElement('img');
+                img.src = chats.imageUrl;
+                img.className = 'chat-Img'
+                li.appendChild(img);
+            }
 
 			const span = document.createElement("span");
 			span.className = "message-time";
@@ -232,7 +250,15 @@ function displayMessages(chats, chatType) {
 
 			const li = document.createElement("li");
 			li.className = "messages-style-receiver-group";
-			li.innerText = chats.message;
+			
+            if(chats.message !== null) {
+                li.innerText = chats.message;
+            } else {
+                const img = document.createElement('img');
+                img.src = chats.imageUrl;
+                img.className = 'chat-Img'
+                li.appendChild(img);
+            }
 
 			const span = document.createElement("div");
 			span.className = "message-time";
@@ -245,7 +271,15 @@ function displayMessages(chats, chatType) {
 		} else {
 			const li = document.createElement("li");
 			li.className = "messages-style-receiver";
-			li.innerText = chats.message;
+			
+            if(chats.message !== null) {
+                li.innerText = chats.message;
+            } else {
+                const img = document.createElement('img');
+                img.src = chats.imageUrl;
+                img.className = 'chat-Img'
+                li.appendChild(img);
+            }
 
 			const span = document.createElement("span");
 			span.className = "message-time";
@@ -296,10 +330,6 @@ async function sendChats(e) {
 			},
 		});
 
-		// if (response.status == "200") {
-		// 	location.reload();
-		// }
-
 		formMessage.value = "";
 	} catch (error) {
 		console.log("Error in sending message", error);
@@ -328,11 +358,55 @@ document.getElementById("fileInput").addEventListener("change", async (e) => {
 			}
 		);
 
-		console.log(response.data); // Log the response from the server
+		console.log(response.data.signedUrl);
+
+        sendImageAsMessage(response.data.signedUrl);
 	} catch (error) {
 		console.error("Error uploading file:", error);
 	}
 });
+
+//function to send image as message
+async function sendImageAsMessage(data) {
+    console.log("Data is", data, chatId, chatType);
+    try {
+		let currentDate = new Date();
+		let hours = currentDate.getHours();
+		let minutes = currentDate.getMinutes();
+		// Ensure minutes and hours are displayed with leading zeroes if necessary
+		hours = hours < 10 ? "0" + hours : hours;
+		minutes = minutes < 10 ? "0" + minutes : minutes;
+		let timeOnly = hours + ":" + minutes;
+
+		let endpoint;
+		let messageInfo;
+		if (chatType == "user") {
+			endpoint = `http://localhost:4000/chat/send-image/${chatId}`;
+			messageInfo = {
+				userName: localStorage.getItem("userName"),
+				imageUrl: data,
+				messageTime: timeOnly,
+			};
+		} else if (chatType == "group") {
+			endpoint = `http://localhost:4000/group/send-image/${chatId}`;
+			messageInfo = {
+				userName: localStorage.getItem("userName"),
+				imageUrl: data,
+				messageTime: timeOnly,
+				groupId: chatId,
+			};
+		}
+
+		const response = await axios.post(endpoint, messageInfo, {
+			headers: {
+				Authorization: localStorage.getItem("accessToken"),
+			},
+		});
+
+	} catch (error) {
+		console.log("Error in sending image as message", error);
+	}
+}
 
 //user logout
 document.getElementById("logOut").addEventListener("click", (e) => {

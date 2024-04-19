@@ -13,9 +13,13 @@ const Message = sequelize.define("message", {
 		allowNull: false,
 	},
 	message: {
-		type: Sequelize.STRING,
-		allowNull: false,
+		type: Sequelize.TEXT,
+		allowNull: true,
 	},
+    imageUrl: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+    },
 	messageTime: {
 		type: Sequelize.STRING,
 		allowNull: false,
