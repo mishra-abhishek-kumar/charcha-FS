@@ -55,8 +55,6 @@ groupInfoBtn.addEventListener("click", async (e) => {
 
 		const { groupUsers } = fetchingGroupUsers.data;
 
-		console.log(groupUsers);
-
 		displayGroupInformation(
 			groupUsers.length,
 			localStorage.getItem("groupName")

@@ -80,14 +80,14 @@ const uploadFileToS3 = async (req, res) => {
 
 		const s3 = new AWS.S3();
 
-		const buffer = await sharp(file.buffer)
-			.resize({ height: 1920, width: 1080, fit: "contain" })
-			.toBuffer();
+		// const buffer = await sharp(file.buffer)
+		// 	.resize({ height: 1920, width: 1080, fit: "contain" })
+		// 	.toBuffer();
 
 		const params = {
 			Bucket: process.env.BUCKET_NAME,
 			Key: randomFileName(),
-			Body: buffer,
+			Body: file.buffer,
 			ContentType: file.mimetype,
 		};
 

@@ -107,6 +107,7 @@ createGroupForm.addEventListener("submit", async (e) => {
 	}
 
 	document.querySelector(".createGroup-container").style.display = "none";
+    location.reload();
 });
 
 document.getElementById("cancelBtn").addEventListener("click", function () {
