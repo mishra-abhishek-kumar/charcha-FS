@@ -21,7 +21,7 @@ document
 
 function displayUsersforGroup(user) {
 	const userDiv = document.createElement("div");
-    userDiv.className = 'user-div'
+	userDiv.className = "user-div";
 
 	const userCheckbox = document.createElement("input");
 	userCheckbox.type = "checkbox";
@@ -57,18 +57,25 @@ createGroupForm.addEventListener("submit", async (e) => {
 
 	// Get the text input value
 	const groupName = document.getElementById("group-name").value;
-	const groupDescription = document.getElementById("group-description").value || "";
+	const groupDescription =
+		document.getElementById("group-description").value || "";
 
 	// Get the IDs of the checked checkboxes
-	const selectedUsers = document.querySelectorAll('input[name="users"]:checked');
-    const selectedAdmins = document.querySelectorAll('input[name="admins"]:checked');
+	const selectedUsers = document.querySelectorAll(
+		'input[name="users"]:checked'
+	);
+	const selectedAdmins = document.querySelectorAll(
+		'input[name="admins"]:checked'
+	);
 
-    const userData = Array.from(selectedUsers).map(user => {
-        return {
-            id: parseInt(user.value),
-            isAdmin: Array.from(selectedAdmins).some(admin => admin.value === user.value)
-        };
-    });
+	const userData = Array.from(selectedUsers).map((user) => {
+		return {
+			id: parseInt(user.value),
+			isAdmin: Array.from(selectedAdmins).some(
+				(admin) => admin.value === user.value
+			),
+		};
+	});
 
 	try {
 		const createGroupResponse = await axios.post(

@@ -321,17 +321,21 @@ closeGroupEditBtn.addEventListener("click", (e) => {
 document.getElementById("add-user").addEventListener("click", async (e) => {
 	try {
 		const fetchingAlreadyExistingGroupUsers = await axios.get(
-			`http://localhost:4000/group/group-users/${localStorage.getItem("groupId")}`,
+			`http://localhost:4000/group/group-users/${localStorage.getItem(
+				"groupId"
+			)}`,
 			{
 				headers: {
 					Authorization: localStorage.getItem("accessToken"),
 				},
 			}
 		);
-        //fetching all the allready existing userIds
-		const userData = fetchingAlreadyExistingGroupUsers.data.groupUsers.map((user) => user.userId);
+		//fetching all the allready existing userIds
+		const userData = fetchingAlreadyExistingGroupUsers.data.groupUsers.map(
+			(user) => user.userId
+		);
 
-        const gettingRemainingUsers = await axios.post(
+		const gettingRemainingUsers = await axios.post(
 			`http://localhost:4000/group/get-moreuser`,
 			{ usersIds: userData },
 			{
@@ -341,19 +345,24 @@ document.getElementById("add-user").addEventListener("click", async (e) => {
 			}
 		);
 
-        if(gettingRemainingUsers.data.remainingUsers.length > 0) {
-            document.querySelector(".addNewUserToGroup-container").style.display = " block";
+		if (gettingRemainingUsers.data.remainingUsers.length > 0) {
+			document.querySelector(".addNewUserToGroup-container").style.display =
+				" block";
 
-            for(let i=0; i<gettingRemainingUsers.data.remainingUsers.length; i++) {
-                displayRemainingUsers(gettingRemainingUsers.data.remainingUsers[i]);
-            }
-        }
+			for (
+				let i = 0;
+				i < gettingRemainingUsers.data.remainingUsers.length;
+				i++
+			) {
+				displayRemainingUsers(gettingRemainingUsers.data.remainingUsers[i]);
+			}
+		}
 	} catch (error) {}
 });
 
 function displayRemainingUsers(user) {
-    const userDiv = document.createElement("div");
-    userDiv.className = 'user-div'
+	const userDiv = document.createElement("div");
+	userDiv.className = "user-div";
 
 	const userCheckbox = document.createElement("input");
 	userCheckbox.type = "checkbox";
@@ -380,27 +389,35 @@ function displayRemainingUsers(user) {
 	userDiv.appendChild(adminCheckbox);
 	userDiv.appendChild(adminLabel);
 
-    document.getElementById('users1').appendChild(userDiv);
+	document.getElementById("users1").appendChild(userDiv);
 }
 
-const addNewUserForm = document.getElementById('addnewusertogroup-form');
+const addNewUserForm = document.getElementById("addnewusertogroup-form");
 addNewUserForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+	e.preventDefault();
 
-    // Get the IDs of the checked checkboxes
-	const selectedUsers = document.querySelectorAll('input[name="users"]:checked');
-    const selectedAdmins = document.querySelectorAll('input[name="admins"]:checked');
+	// Get the IDs of the checked checkboxes
+	const selectedUsers = document.querySelectorAll(
+		'input[name="users"]:checked'
+	);
+	const selectedAdmins = document.querySelectorAll(
+		'input[name="admins"]:checked'
+	);
 
-    const userData = Array.from(selectedUsers).map(user => {
-        return {
-            id: parseInt(user.value),
-            isAdmin: Array.from(selectedAdmins).some(admin => admin.value === user.value)
-        };
-    });
+	const userData = Array.from(selectedUsers).map((user) => {
+		return {
+			id: parseInt(user.value),
+			isAdmin: Array.from(selectedAdmins).some(
+				(admin) => admin.value === user.value
+			),
+		};
+	});
 
-    try {
+	try {
 		const addNewUsers = await axios.post(
-			`http://localhost:4000/group/add-moreuser/${localStorage.getItem('groupId')}`,
+			`http://localhost:4000/group/add-moreuser/${localStorage.getItem(
+				"groupId"
+			)}`,
 			{ usersIds: userData },
 			{
 				headers: {
@@ -408,15 +425,17 @@ addNewUserForm.addEventListener("submit", async (e) => {
 				},
 			}
 		);
-        location.reload();
+		location.reload();
 	} catch (error) {
 		console.log("Error in group users creation FrontEnd", error);
 	}
 
-    document.querySelector(".addNewUserToGroup-container").style.display = " none";
-})
+	document.querySelector(".addNewUserToGroup-container").style.display =
+		" none";
+});
 
 document.getElementById("cancelBtn1").addEventListener("click", function () {
-	document.querySelector(".addNewUserToGroup-container").style.display = " none";
+	document.querySelector(".addNewUserToGroup-container").style.display =
+		" none";
 	location.reload();
 });

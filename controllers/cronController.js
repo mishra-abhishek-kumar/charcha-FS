@@ -31,8 +31,8 @@ const moveChats = async (req, res) => {
 			message: "Messages moved to another table successfully",
 		});
 	} catch (error) {
-		console.error("Error moving and deleting messages:", error);
-		res.status(500).json({ error: "Internal server error" });
+		console.error("Error in cronController to move and delete messages", error);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 

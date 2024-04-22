@@ -10,7 +10,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 //import required to run CRON job
-const { midnightJob } = require('./controllers/cronJob');
+const { midnightJob } = require("./controllers/cronJob");
 midnightJob.start();
 
 //import required to parse multipart/form-data

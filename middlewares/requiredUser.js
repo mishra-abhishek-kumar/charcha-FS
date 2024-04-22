@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 
 		next();
 	} catch (e) {
-		console.log(e);
-		return res.status(401).send("Invalid access key");
+		console.log("Error in authorizing accesstoken middleware", error.message);
+		return res.status(401).send("Invalid accessToken");
 	}
 };

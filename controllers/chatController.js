@@ -2,8 +2,8 @@ const User = require("../models/User");
 const Message = require("../models/Message");
 const { Op, Sequelize } = require("sequelize");
 const AWS = require("aws-sdk");
-const crypto = require('crypto');
-const sharp = require('sharp');
+const crypto = require("crypto");
+const sharp = require("sharp");
 
 const getUsers = async (req, res) => {
 	try {
@@ -13,7 +13,7 @@ const getUsers = async (req, res) => {
 		return res.status(200).json({ users });
 	} catch (error) {
 		console.log("Error in getUsers controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -29,10 +29,10 @@ const sendMessage = async (req, res, next) => {
 			reciepientId: req.params.reciepientId,
 		});
 
-        console.log("222222===>");
 		return res.status(200).json({ chat });
 	} catch (error) {
-		return res.status(500).send(error);
+		console.log("Error in sendMessage controller", error.message);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -54,11 +54,13 @@ const getMessages = async (req, res, next) => {
 
 		return res.status(200).json({ chats: messages, reciepientUser });
 	} catch (error) {
-		return res.status(500).send(error);
+		console.log("Error in getMessages controller", error.message);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
-const randomFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
+const randomFileName = (bytes = 32) =>
+	crypto.randomBytes(bytes).toString("hex");
 
 const uploadFileToS3 = async (req, res) => {
 	try {
@@ -73,12 +75,14 @@ const uploadFileToS3 = async (req, res) => {
 		AWS.config.update({
 			accessKeyId: process.env.IAM_USER_KEY,
 			secretAccessKey: process.env.IAM_USER_SECRET,
-            signatureVersion: 'v4',
+			signatureVersion: "v4", //used to geneteate the signedURL
 		});
 
 		const s3 = new AWS.S3();
 
-        const buffer = await sharp(file.buffer).resize({height: 1920, width: 1080, fit: "contain"}).toBuffer();
+		const buffer = await sharp(file.buffer)
+			.resize({ height: 1920, width: 1080, fit: "contain" })
+			.toBuffer();
 
 		const params = {
 			Bucket: process.env.BUCKET_NAME,
@@ -91,23 +95,26 @@ const uploadFileToS3 = async (req, res) => {
 		const s3Response = await s3.upload(params).promise();
 
 		// Generate signed URL for the uploaded file
-        const signedUrlParams = {
-            Bucket: process.env.BUCKET_NAME,
-            Key: params.Key,
-            Expires: 604000, // URL expiration time in seconds (7 days in this case)
-        };
-        const signedUrl = await s3.getSignedUrlPromise('getObject', signedUrlParams);
+		const signedUrlParams = {
+			Bucket: process.env.BUCKET_NAME,
+			Key: params.Key,
+			Expires: 604000, // URL expiration time in seconds (7 days in this case)
+		};
+		const signedUrl = await s3.getSignedUrlPromise(
+			"getObject",
+			signedUrlParams
+		);
 
-        // Return the uploaded file URL and signed URL in the response
-        return res.status(201).json({ url: s3Response.Location, signedUrl });
+		// Return the uploaded file URL and signed URL in the response
+		return res.status(201).json({ url: s3Response.Location, signedUrl });
 	} catch (error) {
-		console.error("Error in uploadFileToS3 controller:", error);
-		res.status(500).json({ error: "Internal server error" });
+		console.log("Error in uploadFileToS3 controller", error.message);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
 const sendImageAsMessage = async (req, res) => {
-    const { userName, imageUrl, messageTime } = req.body;
+	const { userName, imageUrl, messageTime } = req.body;
 
 	try {
 		const chat = await Message.create({
@@ -120,14 +127,15 @@ const sendImageAsMessage = async (req, res) => {
 
 		return res.status(200).json({ chat });
 	} catch (error) {
-		return res.status(500).send(error);
+		console.log("Error in sendImageAsMessage controller", error.message);
+		return res.status(500).json({ error: "Internal server error" });
 	}
-}
+};
 
 module.exports = {
 	getUsers,
-	sendMessage,    
+	sendMessage,
 	getMessages,
 	uploadFileToS3,
-    sendImageAsMessage,
+	sendImageAsMessage,
 };

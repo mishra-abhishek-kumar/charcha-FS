@@ -14,7 +14,7 @@ const createGroup = async (req, res) => {
 		return res.status(201).json({ group });
 	} catch (error) {
 		console.log("Error in createGroup controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -41,7 +41,7 @@ const createGroupUSers = async (req, res) => {
 			.json({ success: true, message: "users added to the group" });
 	} catch (error) {
 		console.log("Error in createGroupUsers controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -51,7 +51,7 @@ const getUserGroups = async (req, res) => {
 		return res.status(200).json({ usergroups });
 	} catch (error) {
 		console.log("Error in getUserGroups controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -61,7 +61,7 @@ const getGroups = async (req, res) => {
 		return res.status(200).json({ groups });
 	} catch (error) {
 		console.log("Error in getGroups controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -77,7 +77,7 @@ const isAdmin = async (req, res) => {
 		return res.status(200).json({ isAdmin });
 	} catch (error) {
 		console.log("Error in checking isAdmin controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -90,7 +90,7 @@ const getGroupMessages = async (req, res) => {
 		return res.status(200).json({ chats: messages, reciepientGroup });
 	} catch (error) {
 		console.log("Error in getGroupMessages controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -108,7 +108,7 @@ const sendMessage = async (req, res) => {
 		return res.status(200).json({ chat });
 	} catch (error) {
 		console.log("Error in sending group message controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -121,7 +121,7 @@ const getGroupUsers = async (req, res) => {
 		return res.status(200).json({ groupUsers });
 	} catch (error) {
 		console.log("Error in getting group users controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -131,7 +131,7 @@ const getSingleUser = async (req, res) => {
 		return res.status(200).json({ user });
 	} catch (error) {
 		console.log("Error in getSingleUsers from group controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -148,7 +148,7 @@ const makeUserAdmin = async (req, res) => {
 		return res.status(200).json({ adminUser });
 	} catch (error) {
 		console.log("Error in getUsersToUpdate controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -164,7 +164,7 @@ const removeUserFromGroup = async (req, res) => {
 		return res.status(200).json({ adminUser });
 	} catch (error) {
 		console.log("Error in removeUserFromGroup controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -183,7 +183,7 @@ const getMoreUser = async (req, res) => {
 		return res.status(200).json({ remainingUsers });
 	} catch (error) {
 		console.log("Error in getMoreUser controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -209,12 +209,12 @@ const addMoreUserToGroup = async (req, res) => {
 			.json({ success: true, message: "users added to the group" });
 	} catch (error) {
 		console.log("Error in createGroupUsers controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
 const sendImageAsMessage = async (req, res) => {
-    const { userName, imageUrl, messageTime, groupId } = req.body;
+	const { userName, imageUrl, messageTime, groupId } = req.body;
 	try {
 		const chat = await Message.create({
 			sentFrom: userName,
@@ -227,9 +227,9 @@ const sendImageAsMessage = async (req, res) => {
 		return res.status(200).json({ chat });
 	} catch (error) {
 		console.log("Error in sending group message controller", error.message);
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
-}
+};
 
 module.exports = {
 	createGroup,
@@ -245,5 +245,5 @@ module.exports = {
 	removeUserFromGroup,
 	getMoreUser,
 	addMoreUserToGroup,
-    sendImageAsMessage,
+	sendImageAsMessage,
 };

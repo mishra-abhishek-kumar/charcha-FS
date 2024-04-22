@@ -25,16 +25,17 @@ const signUpController = async (req, res) => {
 		const user = await User.create({
 			name,
 			email,
-            phone,
-			password: hashedPassword
+			phone,
+			password: hashedPassword,
 		});
 
 		//generating accessToken
 		const accessToken = generateAccessToken({ id: user.id });
-        
-		return res.status(201).json({user, accessToken});
+
+		return res.status(201).json({ user, accessToken });
 	} catch (error) {
-		return res.status(500).send(error);
+		console.log("Error in signUp controller", error.message);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -64,9 +65,10 @@ const signInController = async (req, res) => {
 		const accessToken = generateAccessToken({ id: user[0].id });
 
 		//sending user on successful login
-		return res.status(200).json({user, accessToken});
+		return res.status(200).json({ user, accessToken });
 	} catch (error) {
-		return res.status(500).send(error);
+		console.log("Error in signIn controller", error.message);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -77,11 +79,12 @@ const generateAccessToken = (id) => {
 		});
 		return accessToken;
 	} catch (error) {
-		console.log(error);
+		console.log("Error in generateAccessToken controller", error.message);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
 module.exports = {
 	signUpController,
-    signInController
+	signInController,
 };
